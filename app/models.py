@@ -10,7 +10,7 @@ class Book(models.Model):
     author = models.ForeignKey(User, on_delete=CASCADE)
     reviewcount = models.IntegerField() #always compute score via these I guess
     scoretotal = models.BigIntegerField()
-
+    chapters = models.IntegerField(validators=[MinValueValidator(0)])
 
 class Review(models.Model):
     class Meta:
@@ -27,6 +27,8 @@ class Chapter(models.Model):
     author = models.ForeignKey(User)
     text = models.CharField()   #TODO: CONSIDER IMPORTING RICH TEXT FIELDS
     novel = models.OneToOneField(Book, on_delete=CASCADE)
+    release = models.DateTimeField(auto_now_add=True)
+    number = models.IntegerField(validators=[MinValueValidator(1)])
 
 
 class Comment(models.Model):
