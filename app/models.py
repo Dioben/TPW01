@@ -7,6 +7,7 @@ from django.db.models import CASCADE
 
 class Book(models.Model):
     title = models.CharField(max_length=150)
+    description = models.CharField(max_length=5000)
     author = models.ForeignKey(User, on_delete=CASCADE)
     reviewcount = models.IntegerField() #always compute score via these I guess
     scoretotal = models.BigIntegerField()
