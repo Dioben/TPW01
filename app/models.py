@@ -21,6 +21,7 @@ class Review(models.Model):
     author = models.ForeignKey(User)
     novel = models.ForeignKey(Book, on_delete=CASCADE)
     rating = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    release = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=5000)
 
 
@@ -40,6 +41,20 @@ class Comment(models.Model):
     author = models.ForeignKey(User)
     chapter = models.ForeignKey(Chapter, on_delete=CASCADE)
     content = models.CharField(max_length=1000)
+    release = models.DateTimeField(auto_now_add=True)
     parent = models.ForeignKey("self", default=None, null=True)
 
-# TODO: Make a User account that extends the default one for extra user data storage
+
+class LastRead(models.Model):
+    class Meta:
+        unique_together = (('author', 'book'),)
+    author = models.ForeignKey(User, on_delete=CASCADE)
+    book = models.ForeignKey(Book, on_delete=CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=CASCADE) #consider replacing this with an int chapter number,idk
+
+
+class Bookmarked(models.Model):
+    class Meta:
+        unique_together = (('author', 'book'),)
+    author = models.ForeignKey(User, on_delete=CASCADE)
+    book = models.ForeignKey(Book, on_delete=CASCADE)
