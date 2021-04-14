@@ -9,9 +9,10 @@ class Book(models.Model):
     title = models.CharField(max_length=150)
     description = models.CharField(max_length=5000)
     author = models.ForeignKey(User, on_delete=CASCADE)
-    reviewcount = models.IntegerField() #always compute score via these I guess
+    reviewcount = models.IntegerField()  # always compute score via these I guess
     scoretotal = models.BigIntegerField()
     chapters = models.IntegerField(validators=[MinValueValidator(0)])
+
 
 class Review(models.Model):
     class Meta:
@@ -25,8 +26,8 @@ class Review(models.Model):
 
 class Chapter(models.Model):
     title = models.CharField(max_length=150)
-    author = models.ForeignKey(User)
-    text = models.CharField()   #TODO: CONSIDER IMPORTING RICH TEXT FIELDS
+    author = models.ForeignKey(User)  # TODO: Author may not be needed for chapters
+    text = models.CharField()  # TODO: CONSIDER IMPORTING RICH TEXT FIELDS
     novel = models.OneToOneField(Book, on_delete=CASCADE)
     release = models.DateTimeField(auto_now_add=True)
     number = models.IntegerField(validators=[MinValueValidator(1)])
@@ -41,3 +42,4 @@ class Comment(models.Model):
     content = models.CharField(max_length=1000)
     parent = models.ForeignKey("self", default=None, null=True)
 
+# TODO: Make a User account that extends the default one for extra user data storage
