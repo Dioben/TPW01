@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 
 from app.commonqueries import *
 from models import *
@@ -32,10 +34,16 @@ def index(request):
 
 
 def bookpage(request, pk):
-    data = {'book': Book.objects.select_related().get(pk=pk)}
+    data = {'book': Book.objects.select_related().get(pk=pk), 'lastread': 0}
     data['chapters'] = Chapter.objects.only("title", "number", "release").filter(novel=data['book'])
     data['reviews'] = Review.objects.filter(novel=data['book']).select_related('author')
-    #if request. TODO: IF USER AUTH'D ALSO QUERY LAST READ AND BOOKMARKED VALUES
+    if request.user.is_authenticated:
+        lastread = LastRead.objects.get(book_id=pk,author=request.user)
+        if lastread is not None:
+            data['lastread'] = lastread.chapter
+            data['bookmarked'] = Bookmarked.objects.filter(author=request.user,book_id=pk).exists()
+    else:
+        data['bookmarked'] = False
     return render(request, 'book.html', data)
 
 
@@ -63,3 +71,18 @@ def userpage(request):
 
 def chapterpage(request,pk,page):
     data = {'chapter': Chapter.objects.get(pk=pk).select_related(), 'comments':commentspage(pk,page)}
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = UserCreationForm()
+    return render(request, 'signup.html', {'form': form})
