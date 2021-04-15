@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from app.models import *
 from datetime import datetime
 
@@ -9,7 +9,7 @@ def bookbyauthor(author):
 
 
 def bookbyrating(page=1,total=20):
-    return Book.objects.order_by('-scoretotal/reviewcount')[(page - 1) * total:page * total]
+    return Book.objects.annotate(rating=F('scoretotal')/F('reviewcount')).order_by('-rating')[(page - 1) * total:page * total]
 
 def bookrisingpop(page=1,total=20):
     twoweeksago = datetime.now() - datetime.timedelta(days=14)
