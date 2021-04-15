@@ -1,8 +1,11 @@
 import datetime
 
 from django.db.models import Count, Sum
+from app.models import *
+from datetime import datetime
 
-from app.models import Book, Review
+def bookbyauthor(author):
+    return Book.objects.filter(author=author)
 
 
 def bookbyrating(page=1,total=20):
@@ -26,3 +29,13 @@ def bookrisingpop(page=1,total=20):
 
 def bookbynew(page=1, total=20):
     return Book.objects.reverse()[(page - 1) * total:page * total]
+
+
+def reviewbyuser(user):
+    return Review.objects.filter(author=user)
+
+
+def commentspage(chapter,page=1, total=15):
+    comments = Comment.objects.filter(chapter_id=chapter,parent__comment=None).select_related("author")[(page - 1) * total:page * total]
+    childcomments = Comment.objects.filter(parent__comment__in=comments).select_related("author")
+    return comments+childcomments

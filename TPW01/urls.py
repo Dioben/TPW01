@@ -21,6 +21,10 @@ from app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('/', views.index, name="index"),
-    path('api/latest', views.latest, name="latestGET"),
-    path('api/hot', views.popular, name='popularGET')
+    path('/hot/<int:page>', views.popularBooks, name="hot"),
+    path('/new/<int:page>', views.newBooks, name="new"),
+    path('/top/<int:page>', views.topRated, name="top"),
+    path('profile/', views.userpage, name="profile"),
+    path('book/<int:pk>', views.bookpage, name="bookpage"),
+    path('chapter/<int:pk>/<int:page>', views.chapterpage, name="chapterpage"),
 ]

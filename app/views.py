@@ -7,20 +7,23 @@ from models import *
 #TODO:
 # put something in index.html/index.js
 # make a login/sign in page AFTER we learn how that stuff works -> on hold until p class I guess
-# load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
 # user profile page allowing new-book creation
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
 # i dont want user stats but that's just cuz they're a pain, we can add them in - not that important (leave for last)
 # book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
 # REST for making/deleting/editing (description and title only) a book
 # REST for adding/removing/editing chapters
-# CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
 # REST STUFF SHOULD BE IN DIFFERENT FILES, MAKE FILES FOR GET,POST AND DELETE POSSIBLY
 # also we should consider JS submitting over <form>, i just sort of don't like forms on viewside
 # allow any user to save books for easy access in a following page
-# maybe save which books and what chapter the user read (history)
-# top rated/ hot pages / new pages
+# maybe save which books and what chapter the user read (history) -> data is now supported
 
+
+
+#DONE ON SERVER END
+# load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
+# CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
+# top rated/ hot pages / new pages -> just needs the view I think
 
 # HOME PAGE
 def index(request):
@@ -37,15 +40,26 @@ def bookpage(request, pk):
 
 
 def topRated(request,page):
-    data = {'sorttype': 'By Rating', 'books': bookbyrating(page)}
+    data = {'sorttype': 'Books By Rating', 'books': bookbyrating(page)}
     return render(request, 'listing.html', data)
 
 
 def popularBooks(request,page):
-    data = {'sorttype': 'By Rating', 'books': bookrisingpop(page)}
+    data = {'sorttype': 'Rising Books', 'books': bookrisingpop(page)}
     return render(request, 'listing.html', data)
 
 
 def newBooks(request,page):
-    data = {'sorttype': 'By Rating', 'books': bookbynew(page)}
+    data = {'sorttype': 'New Books', 'books': bookbynew(page)}
     return render(request, 'listing.html', data)
+
+
+def userpage(request):
+    if not request.user.is_authenticated:
+        return 'uh oh stinky'
+    data = {'user': request.user, 'books': bookbyauthor(request.user), 'reviews': reviewbyuser(request.user), }
+    return render(request, 'userpage.html', data)
+
+
+def chapterpage(request,pk,page):
+    data = {'chapter': Chapter.objects.get(pk=pk).select_related(), 'comments':commentspage(pk,page)}
