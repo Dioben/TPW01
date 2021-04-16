@@ -58,3 +58,4 @@ class Bookmarked(models.Model):
         unique_together = (('author', 'book'),)
     author = models.ForeignKey(User, on_delete=CASCADE)
     book = models.ForeignKey(Book, on_delete=CASCADE)
+

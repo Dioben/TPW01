@@ -3,29 +3,29 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
 from app.commonqueries import *
+from app.creationMethods import *
 from models import *
 # Create your views here.
 
 #TODO:
 # put something in index.html/index.js
-# make a login/sign in page AFTER we learn how that stuff works -> on hold until p class I guess
 # user profile page allowing new-book creation
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
 # i dont want user stats but that's just cuz they're a pain, we can add them in - not that important (leave for last)
 # book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
 # REST for making/deleting/editing (description and title only) a book
 # REST for adding/removing/editing chapters
-# REST STUFF SHOULD BE IN DIFFERENT FILES, MAKE FILES FOR GET,POST AND DELETE POSSIBLY
-# also we should consider JS submitting over <form>, i just sort of don't like forms on viewside
-# allow any user to save books for easy access in a following page
-# maybe save which books and what chapter the user read (history) -> data is now supported
-
-
+# MOVE TO FORMS
 
 #DONE ON SERVER END
 # load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
 # CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
 # top rated/ hot pages / new pages -> just needs the view I think
+# make a login/sign in page AFTER we learn how that stuff works
+#allow any user to save books for easy access in a following page -> bookmarked is a thing, just need to get a form or JS call going browser side
+
+#DONE FOR REAL
+
 
 # HOME PAGE
 def index(request):
@@ -86,3 +86,18 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'signup.html', {'form': form})
+
+
+def bookmark(request):
+    if 'bookid' not in request.POST:
+        return redirect("/")
+    if request.user.is_authenticated:
+        bookmarkSWITCH(request,request.POST['bookid'])
+    return redirect(f"book/{request.POST['bookid']}/")
+
+def createReview(request):
+    if 'bookid' not in request.POST:
+        return redirect("/")
+    if request.user.is_authenticated:
+        reviewPOST(request,request.POST['bookid'])
+    return redirect(f"book/{request.POST['bookid']}/")
