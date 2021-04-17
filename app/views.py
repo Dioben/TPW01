@@ -122,3 +122,7 @@ def chaptereditor(request,book,chapter):
         form.novel = novel
     data = {'book': novel, 'form':form}
     return render(request,"chaptereditor.html",data)
+
+def bookEditor(request):
+    if not request.user.is_authenticated:
+        return HttpResponse('sus',403)
