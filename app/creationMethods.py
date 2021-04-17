@@ -1,6 +1,7 @@
 from django.db.models import F
 from django.http import HttpResponse
 
+from app.forms import ReviewForm
 from models import *
 def booksPOST(book):
     pass
@@ -31,20 +32,26 @@ def bookmarkSWITCH(request,bookid): #ONLY USING THIS ONE, OTHERS ARE AROUND FOR 
     bookmark.save()
     return HttpResponse(bookmark, status=201)
 
-def reviewPOST(request,bookid):
-    review = Review.objects.filter(author=request.user,novel_id=bookid)
+def reviewPOST(request):
+    reviewform = ReviewForm(request.POST)
+    if not reviewform.is_valid():
+        return
+    review = Review.objects.filter(author=request.user,novel_id=reviewform.novel)
     if review.exists():
         review = review.get()
-        Book.objects.filter(pk=bookid).update(scoretotal=F('scoretotal')-review.rating+request.post['rating'])
-        review.rating = request.post['rating']#TODO: SWAP ATTRIBUTIONS HERE, MOVE TO FORMS
+        Book.objects.filter(pk=reviewform.novel).update(scoretotal=F('scoretotal')-review.rating+reviewform.rating)
+        review.rating = reviewform.rating
+        review.text = reviewform.cleaned_data['text']
     else:
-
-    #TODO: IF NEW REVIEW MESS WITH BOOK RATING/REVIEWS
-    #IF NOT NEW JUST MESS WITH RATING BY SUBSTRACTING FORMER VALUE AND ADDING NEW
+        review = reviewform.save(commit=False)
+        review.author = request.user
+        Book.objects.filter(pk=reviewform.novel).update(scoretotal=F('scoretotal') + review.rating,reviewcount=F('reviewcount')+1)
+    review.save()
 
 
 def advanceReadingStatus(request,book,chapter):
     if request.user.is_authenticated:
+        # noinspection PyBroadException
         try:
             lastread = LastRead.objects.get(author=request.user, book_id=book)
             lastread.chapter_id = chapter

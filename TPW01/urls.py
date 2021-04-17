@@ -30,6 +30,7 @@ urlpatterns = [
     path('login/',auth_views.LoginView.as_view("login.html"), name="log in"),
     path("logout/",auth_views.LogoutView.as_view(next_page="/"), name="log out"),
     path('signup/', views.signup, name="sign up"),
-    path('bookmarkpress/',views.bookmark, name="bookmark press")
+    path('bookmarkpress/',views.bookmark, name="bookmark press"),
+    path('chaptereditor/<int:book>/<str:chapter>',views.chaptereditor, name="chapter editor")
 
 ]
