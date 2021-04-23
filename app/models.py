@@ -27,7 +27,7 @@ class Review(models.Model):
 
 class Chapter(models.Model):
     title = models.CharField(max_length=150)
-    text = models.CharField()  # TODO: CONSIDER IMPORTING RICH TEXT FIELDS
+    text = models.CharField(max_length=50000)  # TODO: CONSIDER IMPORTING RICH TEXT FIELDS
     novel = models.OneToOneField(Book, on_delete=CASCADE)
     release = models.DateTimeField(auto_now_add=True)
     number = models.IntegerField(validators=[MinValueValidator(1)])

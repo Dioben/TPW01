@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from app.commonqueries import *
 from app.creationMethods import *
 from app.forms import ChapterPostForm
-from models import *
+from app.models import *
 
 
 # Create your views here.

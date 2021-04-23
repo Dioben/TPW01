@@ -2,7 +2,7 @@ from django.db.models import F
 from django.http import HttpResponse
 
 from app.forms import ReviewForm
-from models import *
+from app.models import *
 def booksPOST(book):
     pass
 
