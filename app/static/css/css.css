@@ -132,8 +132,33 @@ body {
     margin: 20px 10px;
 }
 
+.book-medium-img {
+    width: 90px;
+    height: 125px;
+}
 
+.chapter-book-title > h5 {
+  display: inline;
+  color: black;
+}
 
+.chapter-content-content {
+    margin: 20px 10px;
+}
+
+.comment-list-content > div {
+    margin: 30px 10px 20px 10px;
+}
+
+.comment-form-content {
+    margin: 20px 10px;
+}
+
+.comment-children {
+    margin: 30px 0px 0px 20px;
+    padding: 0 0 0 29px;
+    border-left: solid black 1px;
+}
 
 
 
