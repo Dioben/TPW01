@@ -14,7 +14,12 @@ body {
   background-color: black;
 }
 
-.list-container {
+.separator-thin {
+  height: 1px;
+  background-color: darkgrey;
+}
+
+.container-custom {
   padding: 10px 15px 10px 15px;
   border: 2px solid black;
   margin: 10px;
@@ -32,7 +37,7 @@ body {
   /*display: none;*/
 }
 
-.list-header > span {
+.container-custom-header > span {
   margin-left: 2px;
   font-size: large;
 }
@@ -87,6 +92,45 @@ body {
     margin-top: 20px;
 }
 
+.book-big-img {
+    width: 180px;
+    height: 250px;
+}
+
+.book-tag {
+    background-color: lightgray;
+    padding: 1px 3px 1px 3px;
+    margin: 2px;
+}
+
+.book-tag-title {
+    padding: 1px 0 1px 7px;
+    margin: 2px;
+}
+
+.chapter-list-content > div {
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.chapter-list-content > div > div {
+  margin-bottom: 5px;
+}
+
+.review-list-content > div {
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.review-list-content > div > div {
+  margin-bottom: 20px;
+}
+
+.review-form-content {
+    margin: 20px 10px;
+}
 
 
 
