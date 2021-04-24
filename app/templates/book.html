@@ -33,6 +33,10 @@
             <div class="d-flex justify-content-end flex-grow-1">
                 <div class="d-flex flex-column">
                     <div class="flex-grow-1"></div>
+                    {% if True or isauthor %}
+                        <button class="btn btn-primary btn-sm m-1" type="button"><i class="fa fa-pencil"></i>&nbsp;Edit Book</button>
+                        <button class="btn btn-danger btn-sm m-1" type="button"><i class="fa fa-trash"></i>&nbsp;Delete Book</button>
+                    {% endif %}
                     <button class="btn btn-primary m-1" type="button"><i class="fa fa-play"></i>&nbsp;Continue Reading</button>
                     <button class="btn btn-primary m-1" type="button"><i class="fa fa-bookmark"></i>&nbsp;Bookmark</button>
                 </div>
@@ -62,6 +66,7 @@
                     </div>
                     {% if True or isauthor %}
                         <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
+                        <button class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</button>
                     {% endif %}
                 </div>
                 <div class="d-flex">
@@ -74,6 +79,7 @@
                     </div>
                     {% if True or isauthor %}
                         <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
+                        <button class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</button>
                     {% endif %}
                 </div>
             </div>

@@ -61,7 +61,7 @@ body {
   cursor: pointer;
 }
 
-.list-content > div > div > .col > a:first-of-type {
+.list-content > div > div > .col a:first-of-type {
   font-size: medium;
   color: black;
 }
@@ -143,6 +143,10 @@ body {
 }
 
 .chapter-content-content {
+    margin: 20px 10px;
+}
+
+.book-content-content {
     margin: 20px 10px;
 }
 

@@ -31,7 +31,7 @@ from app.models import *
 def index(request):
     data = {'newchaps': Chapter.objects.order_by("-release").select_related()[:10], 'toprated': bookbyrating(total=10),
             'rising': bookrisingpop(total=10)}
-    return render(request, "book.html", data)
+    return render(request, "index.html", data)
 
 
 def bookpage(request, pk):
