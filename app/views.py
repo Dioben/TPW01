@@ -11,16 +11,12 @@ from app.models import *
 
 # Create your views here.
 
-#TODO:
-# i dont want user stats but that's just cuz they're a pain, we can add them in - not that important (leave for last)
 
-
-# DONE ON SERVER END
+#TODO
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
 # load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
 # CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
 # top rated/ hot pages / new pages -> just needs the view I think
-# make a login/sign in page AFTER we learn how that stuff works
 # allow any user to save books for easy access in a following page -> bookmarked is a thing, just need to get a form or JS call going browser side
 # user profile page allowing new-book creation
 # book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
