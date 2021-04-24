@@ -108,13 +108,13 @@ body {
     margin: 2px;
 }
 
-.chapter-list-content > div {
+.chapter-list-content > div > div {
   margin-top: 20px;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.chapter-list-content > div > div {
+.chapter-list-content > div > div > div {
   margin-bottom: 5px;
 }
 
@@ -168,6 +168,9 @@ body {
     margin-top: 25px;
 }
 
+.dropdown-toggle::after {
+    display: none;
+}
 
 
 

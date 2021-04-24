@@ -29,7 +29,7 @@ from app.models import *
 def index(request):
     data = {'newchaps': Chapter.objects.order_by("-release").select_related()[:10], 'toprated': bookbyrating(total=10),
             'rising': bookrisingpop(total=10)}
-    return render(request, "index.html", data)
+    return render(request, "book.html", data)
 
 
 def bookpage(request, pk):
@@ -71,7 +71,7 @@ def userpage(request):
     if not request.user.is_authenticated:
         return HttpResponse('uh oh stinky', 403)
     data = {'user': request.user, 'books': bookbyauthor(request.user), 'reviews': reviewbyuser(request.user), }
-    return render(request, 'userpage.html', data)
+    return render(request, 'user.html', data)
 
 
 def chapterpage(request, pk, page):

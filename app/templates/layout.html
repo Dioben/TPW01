@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>TPW01</title>
+    <title>{% block title %}TPW01{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static '/css/css.css' %}">
@@ -17,14 +17,18 @@
     <div class="container"><a class="navbar-brand" href="/">TPW Project 1</a>
         <div class="navbar navbar-light navbar-expand-md">
             <div class="collapse navbar-collapse" id="navcol-1"></div>
-            <span class="actions"><a class="login" href="login">Log In</a></span>
-            <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span
-                    class="navbar-toggler-icon"></span></button>
+
+            <span class="actions">
+                {% block user %}
+                    <a class="login" href="login">Login</a>
+                {% endblock %}
+            </span>
+            <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         </div>
     </div>
 </nav>
 <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
-    <div class="container">
+    {% comment %}<div class="container">
         <div class="collapse navbar-collapse" id="navcol-1">
             <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item" role="presentation"><a class="nav-link" href="/">Home</a></li>
@@ -36,7 +40,7 @@
                     <i class="fa fa-search"></i></label></div>
             </form>
         </div>
-    </div>
+    </div>{% endcomment %}
 </nav>
 <div class="container" id="content">
 

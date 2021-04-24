@@ -1,5 +1,22 @@
 {% extends "layout.html" %}
 
+{% block title %}TPW01 - Book title{% endblock %}
+
+{% if True or loggedIn %}
+    {% block user %}
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            user1 <i class="fa fa-user"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item" type="button">Profile</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" type="button">Logout</button>
+          </div>
+        </div>
+    {% endblock %}
+{% endif %}
+
 {% block content %}
 <div class="col">
     <div class="d-flex mb-2">
@@ -27,28 +44,37 @@
     </div>
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
-            <div class="container-custom-header">
+            <div class="container-custom-header d-flex justify-content-between">
                 <span>Chapters</span>
-                <div class="separator"></div>
+                {% if True or isauthor %}
+                    <button type="submit" class="btn btn-primary btn-sm">New chapter</button>
+                {% endif %}
             </div>
+            <div class="separator"></div>
             <div class="chapter-list-content">
-                <div>
-                    <div class="col d-flex flex-column">
-                        <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="col d-flex justify-content-between">
                             <a href="#">Chapter 1</a>
                             <a href="#">X weeks ago</a>
                         </div>
+                        <div class="separator-thin"></div>
                     </div>
-                    <div class="separator-thin"></div>
+                    {% if True or isauthor %}
+                        <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
+                    {% endif %}
                 </div>
-                <div>
-                    <div class="col d-flex flex-column">
-                        <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="flex-grow-1">
+                        <div class="col d-flex justify-content-between">
                             <a href="#">Chapter 2</a>
                             <a href="#">X days ago</a>
                         </div>
+                        <div class="separator-thin"></div>
                     </div>
-                    <div class="separator-thin"></div>
+                    {% if True or isauthor %}
+                        <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
