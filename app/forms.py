@@ -1,4 +1,4 @@
-from django.forms import ModelForm,HiddenInput
+from django.forms import ModelForm, HiddenInput, IntegerField
 from app.models import *
 
 class ReviewForm(ModelForm):

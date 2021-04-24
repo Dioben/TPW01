@@ -31,6 +31,10 @@ urlpatterns = [
     path('signup/', views.signup, name="sign up"),
     # path('bookmarkpress/',views.bookmark, name="bookmark press"),
     # path('chaptereditor/<int:book>/<str:chapter>',views.chaptereditor, name="chapter editor"),
-    # path('bookeditor/', views.bookEditor, name="book editor"),
+    # path('bookeditor/<int:book>', views.bookEditor, name="book editor"),
+    path('submitbook/<int:book>',views.submitbook, name="book poster"),
+    path('deletebook/<int:book>',views.deletebook, name="book deleter"),
+    path('submitchapter/<int:chapter>', views.submitchapter, name="chapter poster"),
+    path('deletechapter/<int:chapterid>', views.deletechapter, name="chapter deleter"),
 
 ]
