@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="row no-gutters">
+
     <div class="col-xl-6 offset-xl-0">
         <div class="container-custom">
             <div class="container-custom-header">
@@ -12,23 +13,23 @@
                 <div class="separator"></div>
             </div>
             <div class="list-content">
-                <!--new here-->
                 {% for chapter in newchaps %}
                 <div>
                     <div class="d-flex flex-nowrap"><img>
-                        <div class="col d-flex flex-column"><a href="#">Book</a><a href="#">Chapter</a></div>
+                        <div class="col d-flex flex-column">
+                            <a href="book/{{ chapter.novel.id }}">{{ chapter.novel.title }}</a>
+                            <a href="chapter/{{ chapter.id }}">{{ chapter.number }} - {{ chapter.title }}</a></div>
                     </div>
                     <div class="separator"></div>
                 </div>
                 {% endfor %}
-                <!---->
-
             </div>
             <div class="d-flex justify-content-center list-button">
                 <a class="btn btn-primary btn-block" href="/new/1">More Updates</a>
             </div>
         </div>
     </div>
+
     <div class="col-xl-6 offset-xl-0">
         <div class="container-custom">
             <div class="container-custom-header">
@@ -36,20 +37,24 @@
                 <div class="separator"></div>
             </div>
             <div class="list-content">
+                {% for book in rising %}
                 <div>
                     <div class="d-flex flex-nowrap"><img>
-                        <div class="col d-flex flex-column"><a href="#">Book</a>
-                            <div class="d-flex justify-content-between"><span>Rating</span><span>Nº Followers</span></div>
+                        <div class="col d-flex flex-column"><a href="book/{{ book.id }}">{{ book.title }}</a>
+                            <div class="d-flex justify-content-between"><span>{{ book.rating }}% Rating</span></div>
                         </div>
                     </div>
+                    like first 2 lines of description here but actually to the side
                     <div class="separator"></div>
                 </div>
+                {% endfor %}
                 <div>
                     <div class="d-flex flex-nowrap"><img>
                         <div class="col d-flex flex-column"><a href="#">Book</a>
                             <div class="d-flex justify-content-between"><span>Rating</span><span>Nº Followers</span></div>
                         </div>
                     </div>
+                    like first 2 lines of description here but actually to the side
                     <div class="separator"></div>
                 </div>
             </div>
@@ -65,14 +70,17 @@
                 <div class="separator"></div>
             </div>
             <div class="list-content">
+                {% for book in toprated %}
                 <div>
                     <div class="d-flex flex-nowrap"><img>
-                        <div class="col d-flex flex-column"><a href="#">Book</a>
-                            <div class="d-flex justify-content-between"><span>Rating</span><span>Nº Followers</span></div>
+                        <div class="col d-flex flex-column"><a href="book/{{ book.id }}">{{ book.title }}</a>
+                            <div class="d-flex justify-content-between"><span>{{ book.rating }}% Rating</span><span>Nº Followers</span></div>
                         </div>
                     </div>
+                    like first 2 lines of description here but actually to the side
                     <div class="separator"></div>
                 </div>
+                {% endfor %}
                 <div>
                     <div class="d-flex flex-nowrap"><img>
                         <div class="col d-flex flex-column"><a href="#">Book</a>

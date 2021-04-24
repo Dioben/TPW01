@@ -1,4 +1,5 @@
 import datetime
+from itertools import chain
 
 from django.db.models import Count, Sum, F
 from app.models import *
@@ -12,7 +13,7 @@ def bookbyrating(page=1,total=20):
 
 def bookrisingpop(page=1,total=20):
     twoweeksago = timezone.now() - timezone.timedelta(days=14)
-    reviews = Review.objects.filter(release__gt=twoweeksago).select_related('novel').annotate(popularity=1/Count('novel')*Sum('rating')).order_by('-popularity')
+    reviews = Review.objects.filter(release__gt=twoweeksago).select_related('novel').annotate(popularity=1/Count('novel')*Sum('rating'),).order_by('-popularity')
     '''
     novels = {}
     for review in reviews: #basic mapping-by-score, maybe I could've done this on db?
@@ -21,7 +22,13 @@ def bookrisingpop(page=1,total=20):
         else:
             novels[review.novel] = review.rating
     '''
-    return reviews[(page - 1) * total:page * total]
+    data = {review.novel for review in reviews[(page - 1) * total:page * total]}
+    for novel in data:
+        novel.rating = novel.scoretotal/novel.reviewcount
+        if novel.reviewcount==0:
+            novel.rating='fuck you'
+    print(data)
+    return data
 
 
 def bookbynew(page=1, total=20):
@@ -35,4 +42,4 @@ def reviewbyuser(user):
 def commentspage(chapter,page=1, total=15):
     comments = Comment.objects.filter(chapter_id=chapter,parent__comment=None).select_related("author")[(page - 1) * total:page * total]
     childcomments = Comment.objects.filter(parent__comment__in=comments).select_related("author")
-    return comments+childcomments
+    return list(chain(comments,childcomments))

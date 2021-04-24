@@ -41,9 +41,9 @@ def bookpage(request, pk):
             data['reviewform'] = ReviewForm(possiblereview.get())
         else:
             data['reviewform'] = ReviewForm()  # do not render this if author or nonauth'd
-        lastread = LastRead.objects.get(book_id=pk, author=request.user)
-        if lastread is not None:
-            data['lastread'] = lastread.chapter
+        lastread = LastRead.objects.filter(book_id=pk, author=request.user)
+        if lastread.exists():
+            data['lastread'] = lastread.get().chapter
             data['bookmarked'] = Bookmarked.objects.filter(author=request.user, book_id=pk).exists()
     else:
         data['bookmarked'] = False
@@ -73,7 +73,7 @@ def userpage(request):
 
 
 def chapterpage(request, pk, page):
-    data = {'chapter': Chapter.objects.get(pk=pk).select_related(), 'comments': commentspage(pk, page)}
+    data = {'chapter': Chapter.objects.get(pk=pk), 'comments': commentspage(pk, page)}
     return render(request, 'chapter.html', data)
 
 
@@ -218,3 +218,7 @@ def chapterdeletetransaction(chapter):
     chapter.novel.chapters -= 1
     chapter.novel.save()
     chapter.delete()
+
+
+def chapterentry(request,pk):
+    return redirect(f'1/')
