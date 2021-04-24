@@ -17,16 +17,18 @@
         <form method="post">
             <h3>Sign up</h3>
              {%  csrf_token %}
-            <div class="form-group">
-                {{ form.username }}
-            </div>
-            <div class="form-group">
-                {{ form.password1 }}
-
-            </div>
-            <div class="form-group">
-                {{ form.password2 }}
-            </div>
+              {% for field in form %}
+        <div class="form-group">
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        </div>
+        {% endfor %}
             <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit">Sign up</button>
             </div>
