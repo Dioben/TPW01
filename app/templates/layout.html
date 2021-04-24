@@ -21,7 +21,22 @@
 
             <span class="actions">
                 {% block user %}
-                    <a class="login" href="login">Login</a>
+
+                    {% if user.is_authenticated %}
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ user.username }} <i class="fa fa-user"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item" type="button">Profile</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" type="button">Logout</button>
+          </div>
+        </div>
+                {% else %}
+                        <a class="login" href="login">Login</a>
+                {% endif %}
                 {% endblock %}
             </span>
             <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>

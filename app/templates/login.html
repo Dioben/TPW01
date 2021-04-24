@@ -16,8 +16,13 @@
 <div class="login-clean">
     <form method="post">
         <h3>Login</h3>
-        <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
-        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password">
+        {%  csrf_token %}
+        <div class="form-group">
+            {{ form.username }}
+            <!--<input class="form-control" type="email" name="email" placeholder="Email"></div>-->
+        <div class="form-group">
+           {{ form.password }}
+            <!--<input class="form-control" type="password" name="password" placeholder="Password">-->
         </div>
         <div class="form-group">
             <button class="btn btn-primary btn-block" type="submit">Login</button>
