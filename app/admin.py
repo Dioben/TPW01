@@ -4,3 +4,4 @@ from app.models import *
 admin.site.register(Book)
 admin.site.register(Chapter)
 admin.site.register(Comment)
+admin.site.register(Review)
