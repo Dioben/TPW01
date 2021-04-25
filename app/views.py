@@ -132,13 +132,11 @@ def chaptereditor(request, book, chapter):
     if not (request.user.is_authenticated and novel.author == request.user):
         return HttpResponse("very stinky", 403)
     if chapter == "new":
-        form = ChapterPostForm()
-        form.novel = novel
+        form = ChapterPostForm(initial={'novel':book})
         chapter = 0
     else:
         chap = Chapter.objects.get(pk=int(chapter))
-        form = ChapterPostForm(instance=chap)
-        form.novel = novel
+        form = ChapterPostForm(instance=chap, initial={'novel':book})
     data = {'book': novel, 'form': form, 'chapter_id': chapter}
     return render(request, "chaptereditor.html", data)
 
@@ -191,21 +189,20 @@ def submitchapter(request, chapterid):
     chapter = Chapter.objects.filter(pk=chapterid)
     if chapter.exists():
         chapter = chapter.get()
-        chid = chapter.id
     else:
         chapter = Chapter()
-        chid = 0
+        chapterid = 0
     form = ChapterPostForm(request.POST)
     if form.is_valid():
         if Book.objects.get(pk=form.cleaned_data['novel']).author != request.user:
             return HttpResponse('get out', 403)
-        chapter.novel = form.cleaned_data['novel']
+        chapter.novel = Book.objects.get(pk=form.cleaned_data['novel'])
         chapter.title = form.cleaned_data['title']
         chapter.text = form.cleaned_data['text']
-        chaptersubmittransaction(chid, chapter)
-        return redirect(f'books/{form.cleaned_data["novel"]}')
+        chaptersubmittransaction(chapterid, chapter)
+        return redirect(f'/book/{form.cleaned_data["novel"]}')
     else:
-        data = {'chapter_id': chid, 'book': Book.objects.get(pk=request.POST['novel']), 'form': form}
+        data = {'chapter_id': chapterid, 'book': Book.objects.get(pk=request.POST['novel']).id, 'form': form}
         return render(request, "chaptereditor.html", data)
 
 
