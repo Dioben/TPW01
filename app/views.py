@@ -68,12 +68,15 @@ def newBooks(request, page):
 def userpage(request):
     if not request.user.is_authenticated:
         return HttpResponse('uh oh stinky', 403)
-    data = {'user': request.user, 'books': bookbyauthor(request.user), 'reviews': reviewbyuser(request.user), }
+    data = {'acc_owner': request.user, 'books': bookbyauthor(request.user), 'reviews': reviewbyuser(request.user)}
     return render(request, 'user.html', data)
 
 
 def chapterpage(request, pk, page):
-    data = {'chapter': Chapter.objects.get(pk=pk), 'comments': commentspage(pk, page)}
+    chapter = Chapter.objects.get(pk=pk)
+    book = chapter.novel
+    author = book.author
+    data = {'chapter': chapter,'book':book, 'author':author, 'comments': commentspage(pk, page), 'isauthor': author == request.user}
     return render(request, 'chapter.html', data)
 
 
@@ -115,13 +118,12 @@ def chaptereditor(request,book,chapter):
     if chapter == "new":
         form = ChapterPostForm()
         form.novel = novel
-        chid = 0
+        chapter = 0
     else:
-        chap = Chapter.objects.get(novel_id=book,number=int(chapter))
-        chid = chap.id
+        chap = Chapter.objects.get(pk=int(chapter))
         form = ChapterPostForm(instance=chap)
         form.novel = novel
-    data = {'book': novel, 'form':form ,'chapter_id':chid}
+    data = {'book': novel, 'form':form ,'chapter_id':chapter}
     return render(request,"chaptereditor.html",data)
 
 def bookEditor(request,book):  # book=0 if new?

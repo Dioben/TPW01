@@ -1,39 +1,27 @@
 {% extends "layout.html" %}
 
 {% block title %}TPW01 - Chapter title{% endblock %}
-
-{% if True or loggedIn %}
-    {% block user %}
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            user1 <i class="fa fa-user"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Profile</button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" type="button">Logout</button>
-          </div>
-        </div>
-    {% endblock %}
-{% endif %}
-
 {% block content %}
 <div class="col">
     <div class="d-flex mb-2">
         <img class="align-self-center mr-3 book-medium-img">
         <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
             <div class="chapter-book-title mb-3">
-                <h5><a href="#">Book title</a></h5>
-                <span>by <a href="#">Author</a></span>
+                <h5><a href="/book/{{ book.id }}">{{ book.title }}</a></h5>
+                <span>by <!--<a href="#">-->{{ author.username }}<!--</a>--></span>
             </div>
             <h4>Chapter title</h4>
         </div>
         <div class="d-flex justify-content-end flex-grow-1">
             <div class="d-flex flex-column">
                 <div class="flex-grow-1"></div>
-                {% if True or isauthor %}
-                    <button class="btn btn-primary btn-sm m-1" type="button"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
-                    <button class="btn btn-danger btn-sm m-1" type="button"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
+                {% if isauthor %}
+                    <form action="/chaptereditor/{{ book.id }}/{{ chapter.id }}">
+                    <button class="btn btn-primary btn-sm m-1" type="submit"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
+                    </form>
+                    <form action="/deletechapter/{{ chapter.id }}">
+                    <button class="btn btn-danger btn-sm m-1" type="submit"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
+                </form>
                 {% endif %}
             </div>
         </div>
