@@ -2,43 +2,32 @@
 
 {% block title %}TPW01 - Chapter editor{% endblock %}
 
-{% if True or loggedIn %}
-    {% block user %}
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            user1 <i class="fa fa-user"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Profile</button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" type="button">Logout</button>
-          </div>
-        </div>
-    {% endblock %}
-{% endif %}
-
 {% block content %}
 <div class="col">
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
             <div class="container-custom-header">
-                <span>Chapter creation / Editing chapter "XXXXX"</span>
+                <span>
+                    {% if chapter_id == 0 %}
+                        Chapter creation
+                    {% else %}
+                        Editing chapter {{ form.title.value }}
+                    {% endif %}
+                </span>
                 <div class="separator"></div>
             </div>
             <div class="chapter-content-content">
-                <form>
+                <form method="post" action="/submitchapter/{{ chapter_id }}">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <label class="mb-0" for="chapter-editor-title">Title</label>
-                        <input type="text" class="form-control" id="chapter-editor-title">
+                        {{ form.title.label_tag }}
+                        {{ form.title }}
                     </div>
                     <div class="form-group mb-1">
-                        <label class="mb-0" for="chapter-editor-content">Content</label>
-                        <textarea class="form-control" id="chapter-editor-content" rows="10">
-Needs JS to auto resize
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
-                        </textarea>
+                        {{ form.text.label_tag }}
+                        {{ form.text }}
                     </div>
+                    {{ form.novel }}
                     <div class="d-flex justify-content-center mt-2">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>

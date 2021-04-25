@@ -2,21 +2,6 @@
 
 {% block title %}TPW01 - Best/Newest/Rising{% endblock %}
 
-{% if True or loggedIn %}
-    {% block user %}
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            user1 <i class="fa fa-user"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Profile</button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" type="button">Logout</button>
-          </div>
-        </div>
-    {% endblock %}
-{% endif %}
-
 {% block content %}
     <div class="row no-gutters">
         <div class="col-xl-12 offset-xl-0">
