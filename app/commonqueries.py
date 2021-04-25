@@ -3,15 +3,18 @@ from itertools import chain
 
 from django.db.models import Count, Sum, F
 from app.models import *
-from django.utils import  timezone
+from django.utils import timezone
+
+
 def bookbyauthor(author):
     return Book.objects.filter(author=author)
 
 
-def bookbyrating(page=1,total=20):
+def bookbyrating(page=1, total=20):
     return Book.objects.annotate(rating=F('scoretotal')/F('reviewcount')).order_by('-rating')[(page - 1) * total:page * total]
 
-def bookrisingpop(page=1,total=20):
+
+def bookrisingpop(page=1, total=20):
     twoweeksago = timezone.now() - timezone.timedelta(days=14)
     reviews = Review.objects.filter(release__gt=twoweeksago).select_related('novel').annotate(popularity=1/Count('novel')*Sum('rating'),).order_by('-popularity')
     '''
@@ -25,8 +28,8 @@ def bookrisingpop(page=1,total=20):
     data = {review.novel for review in reviews[(page - 1) * total:page * total]}
     for novel in data:
         novel.rating = novel.scoretotal/novel.reviewcount
-        if novel.reviewcount==0:
-            novel.rating='fuck you'
+        if novel.reviewcount == 0:
+            novel.rating = 'fuck you'
     print(data)
     return data
 

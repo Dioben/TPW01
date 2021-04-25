@@ -2,48 +2,36 @@
 
 {% block title %}TPW01 - Book editor{% endblock %}
 
-{% if True or loggedIn %}
-    {% block user %}
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            user1 <i class="fa fa-user"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Profile</button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item" type="button">Logout</button>
-          </div>
-        </div>
-    {% endblock %}
-{% endif %}
-
 {% block content %}
 <div class="col">
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
             <div class="container-custom-header">
-                <span>Book creation / Editing book "XXXXX"</span>
+                <span>
+                    {% if bookid == 0 %}
+                        Book creation
+                    {% else %}
+                        Editing book {{ form.title.value }}
+                    {% endif %}
+                </span>
                 <div class="separator"></div>
             </div>
             <div class="book-content-content">
-                <form>
+                <form action="/submitbook/{{ bookid }}" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <label class="mb-0" for="book-editor-title">Title</label>
-                        <input type="text" class="form-control" id="book-editor-title">
+                        {{ form.title.label_tag }}
+                        {{ form.title }}
                     </div>
                     <div class="form-group mb-1">
-                        <label class="mb-0" for="book-editor-content">Description</label>
-                        <textarea class="form-control" id="book-editor-content" rows="10">
-Needs JS to auto resize
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
-                        </textarea>
+                        {{ form.description.label_tag }}
+                        {{ form.description }}
                     </div>
                     {% comment %}<div class="form-group mt-3">
                         <label class="mb-0" for="book-editor-image">Cover image</label><br>
                         <input type="file" id="book-editor-image">
                     </div>{% endcomment %}
-                    <div class="d-flex justify-content-center mt-2">
+                    <div class="d-flex justify-content-center mt-4">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
