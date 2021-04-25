@@ -91,7 +91,7 @@ def chapterpage(request, book, number, page):
         pages = 1
     data = {'chapter': chapter, 'book': book, 'author': author,
             'comments': commentspage(chapter.id, page, COMMENTSPERPAGE),
-            'isauthor': author == request.user, 'next': chapter.number - 1, 'previous': chapter.number - 1,
+            'isauthor': author == request.user, 'next': chapter.number + 1, 'previous': chapter.number - 1,
             'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1}
     return render(request, 'chapter.html', data)
 
