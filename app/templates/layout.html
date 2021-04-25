@@ -21,22 +21,20 @@
 
             <span class="actions">
                 {% block user %}
-
                     {% if user.is_authenticated %}
-
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ user.username }} <i class="fa fa-user"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-right">
-            <button class="dropdown-item" type="button">Profile</button>
-            <div class="dropdown-divider"></div>
-              <form action="/logout/" method="post">
-                  {% csrf_token %}
-            <button class="dropdown-item" type="submit">Logout</button>
-                  </form>
-          </div>
-        </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-link dropdown-toggle btn-sm login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }} <i class="fa fa-user"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" type="button" href="/profile/">Profile</a>
+                        <div class="dropdown-divider"></div>
+                          <form action="/logout/" method="post">
+                              {% csrf_token %}
+                        <button class="dropdown-item" type="submit">Logout</button>
+                              </form>
+                      </div>
+                    </div>
                 {% else %}
                         <a class="login" href="/login">Login</a>
                 {% endif %}
