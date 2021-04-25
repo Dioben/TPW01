@@ -10,7 +10,7 @@
             <h5 class="mt-0 mb-0">{{ book.title }}</h5>
             <span>by <a>{{ book.author }}</a></span>
             <div class="d-flex mt-2">
-                <span class="book-tag-title pl-0">Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
+                <span class="book-tag-title pl-0">Score: {% if rating == None %}0{% else %}{{ rating }}{% endif %}/100</span>
                 {% comment %}<span class="book-tag-title">Tags:</span>
                 <span class="book-tag">Tag1</span>
                 <span class="book-tag">Tag2</span>{% endcomment %}
@@ -70,25 +70,35 @@
         </div>
     </div>
     <div class="col-xl-12 offset-xl-0">
+
         <div class="container-custom">
+{% if  user.is_authenticated and not isauthor%}
             <div class="container-custom-header">
                 <span>Leave a review</span>
                 <div class="separator"></div>
             </div>
             <div class="review-form-content">
-                <form>
+
+                <form action="/review/" method="post">
                     <div class="form-group">
-                        <label class="mb-0" for="review-form-score">Score</label>
-                        <input type="number" class="form-control w-25" id="review-form-score" placeholder="0-100">
+                        {% csrf_token %}
+                        <!--<label class="mb-0" for="review-form-score">Score</label>
+                        <input type="number" class="form-control w-25" id="review-form-score" placeholder="0-100">-->
+                        {{ form.rating }}
                     </div>
                     <div class="form-group">
-                        <label class="mb-0" for="review-form-content">Review content</label>
-                        <textarea class="form-control" id="review-form-content" rows="3"></textarea>
+                       <!-- <label class="mb-0" for="review-form-content">Review content</label>
+                        <textarea class="form-control" id="review-form-content" rows="3"></textarea> -->
+                        {{ form.text }}
                     </div>
+                        {{ form.novel }}
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary"{% if isauthor %}disabled{% endif %}>Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
+                {% elif not user.is_authenticated %}<span>Log in to review!</span>
+                {% elif isauthor %}<span>Authors are not allowed to review their own works</span>
+                {% endif %}
             </div>
         </div>
     </div>

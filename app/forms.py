@@ -10,10 +10,12 @@ class ReviewForm(ModelForm):
         super(ReviewForm, self).__init__(*args, **kwargs)
         self.fields['text'].strip = False
 
+    novel = forms.IntegerField(widget=HiddenInput)
+
     class Meta:
+
         model = Review
-        fields = ['rating', 'text', 'novel']
-        widgets = {'novel': HiddenInput()}
+        fields = ['rating', 'text',]
 
 
 class ChapterPostForm(ModelForm):
