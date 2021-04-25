@@ -26,7 +26,7 @@
                         <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                             <div class="col d-flex flex-column justify-content-between">
                                 <div class="d-flex flex-column">
-                                    <a href="book/{{ book.id }}">{{ book.title }}</a>
+                                    <a href="/book/{{ book.id }}">{{ book.title }}</a>
                                     <div class="d-flex justify-content-between">
                                         <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
                                         <span>Nº Followers</span>
@@ -61,7 +61,7 @@
                         <div>
                             <div class="d-flex flex-nowrap">
                                 <div class="col d-flex flex-column">
-                                    <a href="book/{{ book.id }}">{{ book.title }}</a>
+                                    <a href="/book/{{ book.id }}">{{ book.title }}</a>
                                     <div class="d-flex justify-content-between">
                                         <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
                                         <span>Nº Followers</span>
