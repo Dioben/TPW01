@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="m-3">
+    <div class="description m-3">
         {{ book.description }}
     </div>
     <div class="col-xl-12 offset-xl-0">
@@ -41,32 +41,21 @@
             </div>
             <div class="separator"></div>
             <div class="chapter-list-content">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <div class="col d-flex justify-content-between">
-                            <a href="#">Chapter 1</a>
-                            <a href="#">X weeks ago</a>
+                {% for chapter in chapters %}
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <div class="col d-flex justify-content-between">
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}">{{ chapter.title }}</a>
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}">{{ chapter.release }}</a>
+                            </div>
+                            <div class="separator-thin"></div>
                         </div>
-                        <div class="separator-thin"></div>
+                        {% if isauthor %}
+                            <a href="/chaptereditor/{{ book.id }}/{{ chapter.number }}" class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</a>
+                            <a href="/deletechapter/{{ chapter.id }}" class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</a>
+                        {% endif %}
                     </div>
-                    {% if isauthor %}
-                        <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
-                        <button class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</button>
-                    {% endif %}
-                </div>
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <div class="col d-flex justify-content-between">
-                            <a href="#">Chapter 2</a>
-                            <a href="#">X days ago</a>
-                        </div>
-                        <div class="separator-thin"></div>
-                    </div>
-                    {% if isauthor %}
-                        <button class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</button>
-                        <button class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</button>
-                    {% endif %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

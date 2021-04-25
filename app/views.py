@@ -158,7 +158,7 @@ def bookEditor(request, book):  # book=0 if new?
 
 
 def deletebook(request, book):
-    novel = Book.objects.filter(pk=book)
+    novel = Book.objects.get(pk=book)
     if not request.user.is_authenticated or not (request.user.is_staff or request.user == novel.author):
         return HttpResponse('get out', 403)
     novel.delete()
@@ -175,12 +175,12 @@ def submitbook(request, book):
         novel = novel.get()
     if request.user != novel.author:
         return HttpResponse('get out', 403)
-    form = BookCreationForm(request.post)
+    form = BookCreationForm(request.POST)
     if form.is_valid():
         novel.title = form.cleaned_data['title']
         novel.description = form.cleaned_data['description']
         novel.save()
-        return redirect(f'book/{book}')
+        return redirect(f'/book/{novel.id}')
     else:
         return render(request, "bookeditor.html", {'bookid': book, 'form': form})
 
@@ -205,7 +205,7 @@ def submitchapter(request, chapterid):
         chaptersubmittransaction(chid, chapter)
         return redirect(f'books/{form.cleaned_data["novel"]}')
     else:
-        data = {'chapter_id': chid, 'book': Book.objects.get(pk=request.post['novel']), 'form': form}
+        data = {'chapter_id': chid, 'book': Book.objects.get(pk=request.POST['novel']), 'form': form}
         return render(request, "chaptereditor.html", data)
 
 
@@ -218,17 +218,17 @@ def chaptersubmittransaction(chid, chapter):
     chapter.save()
 
 
-def deletechapter(request, chapter):
+def deletechapter(request, chapterid):
     if not request.user.is_authenticated:
         return HttpResponse('get out', 403)
-    chapter = Chapter.objects.filter(pk=chapter)
+    chapter = Chapter.objects.filter(pk=chapterid)
     if chapter.exists():
         chapter = chapter.get()
         if request.user.is_staff or chapter.novel.author == request.user:
             nv = chapter.novel
             chapterdeletetransaction(chapter)
 
-            return redirect(f'books/{nv}')
+            return redirect(f'/book/{nv.id}')
         return HttpResponse("No permission", 403)
     else:
         return HttpResponse("Not Found", 404)
