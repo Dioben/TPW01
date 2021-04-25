@@ -1,3 +1,5 @@
+import math
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
@@ -5,14 +7,14 @@ from django.shortcuts import render, redirect
 
 from app.commonqueries import *
 from app.creationMethods import *
-from app.forms import ChapterPostForm, BookCreationForm
+from app.forms import ChapterPostForm, BookCreationForm, CommentForm
 from app.models import *
-
 
 # Create your views here.
 
 
-#TODO
+# TODO
+# comment deleting
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
 # load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
 # CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
@@ -22,6 +24,9 @@ from app.models import *
 # book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
 # REST for making/deleting/editing (description and title only) a book
 # REST for adding/removing/editing chapters
+
+COMMENTSPERPAGE = 15
+
 
 # HOME PAGE
 def index(request):
@@ -72,11 +77,23 @@ def userpage(request):
     return render(request, 'user.html', data)
 
 
-def chapterpage(request, pk, page):
-    chapter = Chapter.objects.get(pk=pk)
+def chapterpage(request, book, number, page):
+    chapter = Chapter.objects.get(novel_id=book, number=number)
     book = chapter.novel
     author = book.author
-    data = {'chapter': chapter,'book':book, 'author':author, 'comments': commentspage(pk, page), 'isauthor': author == request.user}
+    form = CommentForm()
+    form.chapter = chapter
+    pages = Comment.objects.filter(chapter_id=chapter.id).count() / COMMENTSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data = {'chapter': chapter, 'book': book, 'author': author,
+            'comments': commentspage(chapter.id, page, COMMENTSPERPAGE),
+            'isauthor': author == request.user, 'next': chapter.number - 1, 'previous': chapter.number - 1,
+            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1}
     return render(request, 'chapter.html', data)
 
 
@@ -111,7 +128,7 @@ def createReview(request):
     return redirect(f"book/{request.POST['novel']}/")
 
 
-def chaptereditor(request,book,chapter):
+def chaptereditor(request, book, chapter):
     novel = Book.objects.get(pk=book)
     if not (request.user.is_authenticated and novel.author == request.user):
         return HttpResponse("very stinky", 403)
@@ -123,12 +140,13 @@ def chaptereditor(request,book,chapter):
         chap = Chapter.objects.get(pk=int(chapter))
         form = ChapterPostForm(instance=chap)
         form.novel = novel
-    data = {'book': novel, 'form':form ,'chapter_id':chapter}
-    return render(request,"chaptereditor.html",data)
+    data = {'book': novel, 'form': form, 'chapter_id': chapter}
+    return render(request, "chaptereditor.html", data)
 
-def bookEditor(request,book):  # book=0 if new?
+
+def bookEditor(request, book):  # book=0 if new?
     if not request.user.is_authenticated:
-        return HttpResponse('sus',403)
+        return HttpResponse('sus', 403)
     novel = Book.objects.filter(pk=book)
     if novel.exists():
         novel = novel.get()
@@ -137,18 +155,18 @@ def bookEditor(request,book):  # book=0 if new?
     else:
         novel = Book(author=request.user)
     form = BookCreationForm(instance=novel)
-    return render(request,"bookeditor.html",{'bookid':book, 'form':form})
+    return render(request, "bookeditor.html", {'bookid': book, 'form': form})
 
 
-def deletebook(request,book):
+def deletebook(request, book):
     novel = Book.objects.filter(pk=book)
     if not request.user.is_authenticated or not (request.user.is_staff or request.user == novel.author):
-        return HttpResponse('get out',403)
+        return HttpResponse('get out', 403)
     novel.delete()
     return redirect('/')
 
 
-def submitbook(request,book):
+def submitbook(request, book):
     if not request.user.is_authenticated:
         return HttpResponse('get out', 403)
     novel = Book.objects.filter(pk=book)
@@ -165,10 +183,10 @@ def submitbook(request,book):
         novel.save()
         return redirect(f'book/{book}')
     else:
-        return render(request,"bookeditor.html",{'bookid':book, 'form':form})
+        return render(request, "bookeditor.html", {'bookid': book, 'form': form})
 
 
-def submitchapter(request,chapterid):
+def submitchapter(request, chapterid):
     if not request.user.is_authenticated or 'novel' not in request.POST:
         return HttpResponse('get out', 403)
     chapter = Chapter.objects.filter(pk=chapterid)
@@ -185,21 +203,23 @@ def submitchapter(request,chapterid):
         chapter.novel = form.cleaned_data['novel']
         chapter.title = form.cleaned_data['title']
         chapter.text = form.cleaned_data['text']
-        chaptersubmittransaction(chid,chapter)
+        chaptersubmittransaction(chid, chapter)
         return redirect(f'books/{form.cleaned_data["novel"]}')
     else:
-        data = {'chapter_id':chid, 'book': Book.objects.get(pk=request.post['novel']), 'form': form}
+        data = {'chapter_id': chid, 'book': Book.objects.get(pk=request.post['novel']), 'form': form}
         return render(request, "chaptereditor.html", data)
 
+
 @transaction.atomic
-def chaptersubmittransaction(chid,chapter):
+def chaptersubmittransaction(chid, chapter):
     if not chid:  # new chapter
         chapter.novel.chapters += 1
         chapter.number = chapter.novel.chapters
         chapter.novel.save()
     chapter.save()
 
-def deletechapter(request,chapter):
+
+def deletechapter(request, chapter):
     if not request.user.is_authenticated:
         return HttpResponse('get out', 403)
     chapter = Chapter.objects.filter(pk=chapter)
@@ -210,17 +230,31 @@ def deletechapter(request,chapter):
             chapterdeletetransaction(chapter)
 
             return redirect(f'books/{nv}')
-        return HttpResponse("No permission",403)
+        return HttpResponse("No permission", 403)
     else:
         return HttpResponse("Not Found", 404)
 
+
 @transaction.atomic
 def chapterdeletetransaction(chapter):
-    Chapter.objects.filter(novel=chapter.novel,number__gt=chapter.number).update(number=F('number')-1)
+    Chapter.objects.filter(novel=chapter.novel, number__gt=chapter.number).update(number=F('number') - 1)
     chapter.novel.chapters -= 1
     chapter.novel.save()
     chapter.delete()
 
 
-def chapterentry(request,pk):
+def chapterentry(request, book, number):
     return redirect(f'1/')
+
+
+def postcomment(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("no account", 403)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = Comment(author=request.user, content=form.cleaned_data['content'],chapter=form.cleaned_data['chapter'])
+        if 'parent' in request.POST:
+            comment.parent = Comment.objects.get(pk=request.POST['parent'])
+        comment.save()
+        return redirect(f'/chapter/{request.POST["book"]}/{request.POST["chapter"]}/{request.POST["page"]}')
+    return HttpResponse("something went wrong", 404)

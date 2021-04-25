@@ -43,6 +43,7 @@ def reviewbyuser(user):
 
 
 def commentspage(chapter,page=1, total=15):
-    comments = Comment.objects.filter(chapter_id=chapter,parent__comment=None).select_related("author")[(page - 1) * total:page * total]
-    childcomments = Comment.objects.filter(parent__comment__in=comments).select_related("author")
+    comments = Comment.objects.filter(chapter_id=chapter,parent__comment=None)[(page - 1) * total:page * total]
+    parents = [item['id'] for item in comments.values()]
+    childcomments = Comment.objects.filter(parent__in=parents)
     return list(chain(comments,childcomments))

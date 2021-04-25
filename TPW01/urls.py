@@ -26,8 +26,8 @@ urlpatterns = [
     path('top/<int:page>/', views.topRated, name="top"),
     path('profile/', views.userpage, name="profile"),
     path('book/<int:pk>/', views.bookpage, name="bookpage"),
-    path('chapter/<int:pk>/<int:page>/', views.chapterpage, name="chapterpage"),
-    path('chapter/<int:pk>/',views.chapterentry,name="chapterpagepageNX"),
+    path('chapter/<int:book>/<int:number>/<int:page>/', views.chapterpage, name="chapterpage"),
+    path('chapter/<int:book>/<int:number>/',views.chapterentry,name="chapterpagepageNX"),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path("logout/",auth_views.LogoutView.as_view(next_page="/"), name="log out"),
     path('signup/', views.signup, name="sign up"),
@@ -38,5 +38,5 @@ urlpatterns = [
     path('deletebook/<int:book>',views.deletebook, name="book deleter"),
     path('submitchapter/<int:chapter>', views.submitchapter, name="chapter poster"),
     path('deletechapter/<int:chapterid>', views.deletechapter, name="chapter deleter"),
-
+    path('comment/',views.postcomment,name="commentpost")
 ]
