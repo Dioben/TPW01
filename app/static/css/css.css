@@ -1,3 +1,8 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     color: #CBCBCB;
     display: flex;
@@ -294,6 +299,30 @@ a {
    display: -webkit-box;
    -webkit-line-clamp: 2;
    -webkit-box-orient: vertical;
+}
+
+.book-header > .d-flex {
+    background-color: #2A3642;
+    padding: 0 10px 0 10px;
+    margin-top: -10px;
+    /*border-left: 100vw solid #2A3642;*/
+    /*border-right: 100vw solid #2A3642;*/
+    /*margin: -10px -100vw 0 -100vw;*/
+}
+
+.book-header-separator {
+    height: 2px;
+    background-color: #2b2b2b;
+    /*margin-left: -100vw;*/
+    /*margin-right: -100vw;*/
+}
+
+.book-header > .description {
+    background-color: #131313;
+    padding: 10px 50px 10px 50px;
+    /*border-left: 100vw solid #131313;*/
+    /*border-right: 100vw solid #131313;*/
+    /*margin: 0 -100vw 0 -100vw;*/
 }
 
 
