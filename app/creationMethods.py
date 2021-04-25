@@ -34,17 +34,20 @@ def reviewPOST(request):
     reviewform = ReviewForm(request.POST)
     if not reviewform.is_valid():
         return
-    review = Review.objects.filter(author=request.user, novel_id=reviewform.novel)
+    review = Review.objects.filter(author=request.user, novel_id=reviewform.cleaned_data['novel'])
+    book = Book.objects.filter(pk=reviewform.cleaned_data['novel'])
+    if not book.exists():
+        return
     if review.exists():
         review = review.get()
-        Book.objects.filter(pk=reviewform.novel).update(scoretotal=F('scoretotal') - review.rating + reviewform.rating)
-        review.rating = reviewform.rating
+        book.update(scoretotal=F('scoretotal') - review.rating + reviewform.cleaned_data['rating'])
+        review.rating = reviewform.cleaned_data['rating']
         review.text = reviewform.cleaned_data['text']
     else:
         review = reviewform.save(commit=False)
         review.author = request.user
-        Book.objects.filter(pk=reviewform.novel).update(scoretotal=F('scoretotal') + review.rating,
-                                                        reviewcount=F('reviewcount') + 1)
+        review.novel = book.get()
+        book.update(scoretotal=F('scoretotal') + review.rating,reviewcount=F('reviewcount') + 1)
     review.save()
 
 
