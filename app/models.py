@@ -12,6 +12,7 @@ class Book(models.Model):
     reviewcount = models.IntegerField(default=0)  # always compute score via these I guess
     scoretotal = models.BigIntegerField(default=0)
     chapters = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    bookmarks = models.ManyToManyField(User, related_name="bookmarks", blank=True)
 
 
 class Review(models.Model):
@@ -47,11 +48,4 @@ class LastRead(models.Model):
     author = models.ForeignKey(User, on_delete=CASCADE)
     book = models.ForeignKey(Book, on_delete=CASCADE)
     chapter = models.ForeignKey(Chapter, on_delete=CASCADE)
-
-
-class Bookmarked(models.Model):
-    class Meta:
-        unique_together = (('author', 'book'),)
-    author = models.ForeignKey(User, on_delete=CASCADE)
-    book = models.ForeignKey(Book, on_delete=CASCADE)
 

@@ -14,7 +14,7 @@
             <div class="list-content">
                 {% for chapter in newchaps %}
                 <div>
-                    <div class="d-flex flex-nowrap"><img>
+                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
                             <a href="book/{{ chapter.novel.id }}">{{ chapter.novel.title }}</a>
                             <a href="chapter/{{ chapter.novel.id }}/{{ chapter.number }}">{{ chapter.number }} - {{ chapter.title }}</a></div>
@@ -38,7 +38,7 @@
             <div class="list-content">
                 {% for book in rising %}
                 <div>
-                    <div class="d-flex flex-nowrap"><img>
+                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
                             <a href="book/{{ book.id }}">{{ book.title }}</a>
                             <div class="d-flex justify-content-between">
@@ -66,7 +66,7 @@
             <div class="list-content">
                 {% for book in toprated %}
                 <div>
-                    <div class="d-flex flex-nowrap"><img>
+                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
                             <a href="book/{{ book.id }}">{{ book.title }}</a>
                             <div class="d-flex justify-content-between">

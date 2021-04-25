@@ -23,7 +23,7 @@
                 <div class="list-content">
                     {% for book in books %}
                     <div>
-                        <div class="d-flex flex-nowrap"><img>
+                        <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                             <div class="col d-flex flex-column justify-content-between">
                                 <div class="d-flex flex-column">
                                     <a href="book/{{ book.id }}">{{ book.title }}</a>
@@ -49,7 +49,7 @@
                     </div>
                     {% endfor %}
                 </div>
-                <div class="d-flex justify-content-center list-button">
+                <div class="d-flex justify-content-center list-button mt-2">
                     <a class="btn btn-primary btn-block" href="/bookeditor/0">New Book</a>
                 </div>
             </div>

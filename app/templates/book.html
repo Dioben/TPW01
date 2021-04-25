@@ -5,7 +5,7 @@
 {% block content %}
 <div class="col">
     <div class="d-flex mb-2">
-        <img class="align-self-center mr-3 book-big-img">
+        {% comment %}<img class="align-self-center mr-3 book-big-img">{% endcomment %}
         <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
             <h5 class="mt-0 mb-0">{{ book.title }}</h5>
             <span>by <a>{{ book.author }}</a></span>
@@ -23,7 +23,17 @@
                         <a href="/deletebook/{{ book.id }}" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i>&nbsp;Delete Book</a>
                     {% endif %}
                     <button class="btn btn-primary m-1" type="button"><i class="fa fa-play"></i>&nbsp;Continue Reading</button>
-                    <button class="btn btn-primary m-1" type="button"><i class="fa fa-bookmark"></i>&nbsp;Bookmark</button>
+                    <form class="d-flex" action="/bookmarkpress/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ book.id }}" name="bookid">
+                        <button class="btn btn-primary m-1 flex-grow-1" type="submit">
+                            {% if bookmarked %}
+                                <i class="fa fa-bookmark-o"></i>&nbsp;Unbookmark
+                            {% else %}
+                                <i class="fa fa-bookmark"></i>&nbsp;Bookmark
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

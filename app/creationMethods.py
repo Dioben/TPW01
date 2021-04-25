@@ -6,27 +6,27 @@ from app.models import *
 
 
 def bookmarkPOST(request, bookid):  # NOTE: BOOKMARK METHODS DO NOT TEST AUTH, DO THAT IN PARENT METHOD
-    bookmark = Bookmarked(author=request.user, book_id=bookid)
-    bookmark.save()
-    return HttpResponse(bookmark, status=201)
+    book = Book.objects.get(pk=bookid)
+    book.bookmarks.add(request.user)
+    book.save()
+    return HttpResponse(book, status=201)
 
 
 def bookmarkDELETE(request, bookid):
-    bookmark = Bookmarked.objects.filter(author=request.user, book_id=bookid)
-    if bookmark.exists():
-        bookmark.delete()
-        return HttpResponse(bookmark, status=202)
+    book = Book.objects.get(pk=bookid)
+    if Book.objects.filter(pk=bookid, bookmarks=request.user).exists():
+        book.bookmarks.remove(request.user)
+        return HttpResponse(book, status=202)
     return HttpResponse("", status=204)
 
 
-def bookmarkSWITCH(request,
-                   bookid):  # ONLY USING THIS ONE, OTHERS ARE AROUND FOR REST API IMPLEMENTATION PURPOSES, CONSIDER REMOVING
-    bookmark = Bookmarked.objects.filter(author=request.user, book_id=bookid)
-    if bookmark.exists():
-        bookmark.delete()
+def bookmarkSWITCH(request, bookid):  # ONLY USING THIS ONE, OTHERS ARE AROUND FOR REST API IMPLEMENTATION PURPOSES, CONSIDER REMOVING
+    book = Book.objects.get(pk=bookid)
+    if Book.objects.filter(pk=bookid, bookmarks=request.user).exists():
+        book.bookmarks.remove(request.user)
         return  # HttpResponse(bookmark, status=202)
-    bookmark = Bookmarked(author=request.user, book_id=bookid)
-    bookmark.save()
+    book.bookmarks.add(request.user)
+    book.save()
     return  # HttpResponse(bookmark, status=201)
 
 

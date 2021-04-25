@@ -48,7 +48,7 @@ def bookpage(request, pk):
         lastread = LastRead.objects.filter(book_id=pk, author=request.user)
         if lastread.exists():
             data['lastread'] = lastread.get().chapter
-            data['bookmarked'] = Bookmarked.objects.filter(author=request.user, book_id=pk).exists()
+        data['bookmarked'] = Book.objects.filter(pk=pk, bookmarks=request.user).exists()
     else:
         data['bookmarked'] = False
     return render(request, 'book.html', data)
@@ -72,7 +72,7 @@ def newBooks(request, page):
 def userpage(request):
     if not request.user.is_authenticated:
         return HttpResponse('uh oh stinky', 403)
-    data = {'acc_owner': request.user, 'books': bookbyauthor(request.user), 'reviews': reviewbyuser(request.user)}
+    data = {'acc_owner': request.user, 'books': bookbyauthor(request.user), 'bookmarks': bookmarksbyuser(request.user)} #, 'reviews': reviewbyuser(request.user)}
     return render(request, 'user.html', data)
 
 
@@ -116,7 +116,7 @@ def bookmark(request):
         return redirect("/")
     if request.user.is_authenticated:
         bookmarkSWITCH(request, request.POST['bookid'])
-    return redirect(f"book/{request.POST['bookid']}/")
+    return redirect(f"/book/{request.POST['bookid']}/")
 
 
 def createReview(request):
@@ -124,7 +124,7 @@ def createReview(request):
         return redirect("/")
     if request.user.is_authenticated:
         reviewPOST(request)
-    return redirect(f"book/{request.POST['novel']}/")
+    return redirect(f"/book/{request.POST['novel']}/")
 
 
 def chaptereditor(request, book, chapter):

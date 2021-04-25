@@ -47,3 +47,7 @@ def commentspage(chapter,page=1, total=15):
     parents = [item['id'] for item in comments.values()]
     childcomments = Comment.objects.filter(parent__in=parents)
     return list(chain(comments,childcomments))
+
+
+def bookmarksbyuser(user):
+    return Book.objects.filter(bookmarks=user)
