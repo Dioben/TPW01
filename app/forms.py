@@ -28,3 +28,9 @@ class BookCreationForm(ModelForm):
             'title': TextInput(attrs={'class': 'form-control'}),
             'description': Textarea(attrs={'class': 'form-control'})
         }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['chapter','content']
+        widgets = {'chapter':HiddenInput(), 'content':Textarea(attrs={'class': 'form-control','rows':"3"})}

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}TPW01 - Chapter title{% endblock %}
+{% block title %} {{ chapter.number }} - {{ chapter.title }}{% endblock %}
 {% block content %}
 <div class="col">
     <div class="d-flex mb-2">
@@ -10,7 +10,7 @@
                 <h5><a href="/book/{{ book.id }}">{{ book.title }}</a></h5>
                 <span>by <!--<a href="#">-->{{ author.username }}<!--</a>--></span>
             </div>
-            <h4>Chapter title</h4>
+            <h4>{{ chapter.number }} - {{ chapter.title }}</h4>
         </div>
         <div class="d-flex justify-content-end flex-grow-1">
             <div class="d-flex flex-column">
@@ -30,26 +30,26 @@
         <div class="container-custom">
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-between">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">« Previous Chapter</a>
+                    <li class="page-item {% if not previous %}disabled" {% endif %}>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next Chapter »</a>
+                    <li class="page-item {% if next <= book.chapters %}disabled {% endif %}">
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
                     </li>
                 </ul>
             </nav>
             <div class="separator"></div>
             <div class="chapter-content-content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
+                {{ chapter.text }}
             </div>
             <div class="separator"></div>
             <nav aria-label="pagination">
-                <ul class="pagination justify-content-between">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">« Previous Chapter</a>
+                 <ul class="pagination justify-content-between">
+                    <li class="page-item {% if not previous %}disabled" {% endif %}>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next Chapter »</a>
+                    <li class="page-item {% if next <= book.chapters %}disabled {% endif %}">
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
                     </li>
                 </ul>
             </nav>
@@ -62,142 +62,105 @@
                 <div class="separator"></div>
             </div>
             <div class="comment-form-content">
-                <form>
+                <form method="post" action="/comment/">
+                    {% csrf_token %}
+                    {{ form.chapter }}
+                    <input name="book" type="hidden" value="{{ book.id }}">
+                    <input name="chapter" type="hidden" value="{{ chapter.number }}">
+                    <input name="page" type="hidden" value="{{ page }}">
+
                     <div class="form-group mb-1">
-                        <textarea class="form-control" rows="3"></textarea>
+                        {{ form.content }}
                     </div>
                     <div class="d-flex justify-content-end mb-2">
-                        <button type="submit" class="btn btn-primary">Post</button>
+                        <button type="submit" class="btn btn-primary {% if not user.is_authenticated %}disabled{% endif %}">Post</button>
                     </div>
                 </form>
                 <div class="separator"></div>
             </div>
             <div class="comment-list-content">
-                <div class="d-flex flex-column">
+                {% for comment in comments %}
+                    {% if not comment.parent %}
+                    <div class="d-flex flex-column">
                     <div class="d-flex justify-content-between">
-                        <span>User</span>
-                        <span>Release</span>
+                        <span>{{ comment.author }}</span>
+                        <span>{{ comment.release }}</span>
                     </div>
                     <div class="mt-1">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
+                        {{ comment.content}}
                     </div>
-                    <div class="d-flex justify-content-end mb-2">
-                        <button class="btn btn-primary btn-sm">Reply</button>
-                    </div>
-                    <form>
-                        <div class="form-group mb-1">
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="d-flex justify-content-end mb-2">
-                            <button type="submit" class="btn btn-primary">Post</button>
-                        </div>
-                    </form>
+                    <div class="separator"></div>
                     <div class="comment-children">
+                        {% for childcomment in comments %}
+                            {% if childcomment.parent.id == comment.id %}
                         <div class="d-flex flex-column">
                             <div class="d-flex justify-content-between">
-                                <span>User</span>
-                                <span>Release</span>
+                                <span>{{ childcomment.author }}</span>
+                                <span>{{ childcomment.release }}</span>
                             </div>
                             <div class="mt-1">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
+                                {{ childcomment.content }}
                             </div>
-                            <div class="d-flex justify-content-end mb-2">
-                                <button class="btn btn-primary btn-sm">Reply</button>
-                            </div>
-                            <form hidden>
-                                <div class="form-group mb-1">
-                                    <textarea class="form-control" rows="3"></textarea>
-                                </div>
-                                <div class="d-flex justify-content-end mb-2">
-                                    <button type="submit" class="btn btn-primary">Post</button>
-                                </div>
-                            </form>
-                            <div class="comment-children">
-                                <div class="d-flex flex-column">
-                                    <div class="d-flex justify-content-between">
-                                        <span>User</span>
-                                        <span>Release</span>
-                                    </div>
-                                    <div class="mt-1">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
-                                    </div>
-                                    <div class="d-flex justify-content-end mb-2">
-                                        <button class="btn btn-primary btn-sm">Reply</button>
-                                    </div>
-                                    <form hidden>
-                                        <div class="form-group mb-1">
-                                            <textarea class="form-control" rows="3"></textarea>
-                                        </div>
-                                        <div class="d-flex justify-content-end mb-2">
-                                            <button type="submit" class="btn btn-primary">Post</button>
-                                        </div>
-                                    </form>
-                                    <div class="comment-children"></div>
-                                </div>
-                            </div>
+                            <div class="separator"></div>
                         </div>
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-between">
-                                <span>User</span>
-                                <span>Release</span>
-                            </div>
-                            <div class="mt-1">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
-                            </div>
-                            <div class="d-flex justify-content-end mb-2">
-                                <button class="btn btn-primary btn-sm">Reply</button>
-                            </div>
-                            <form hidden>
-                                <div class="form-group mb-1">
-                                    <textarea class="form-control" rows="3"></textarea>
-                                </div>
-                                <div class="d-flex justify-content-end mb-2">
-                                    <button type="submit" class="btn btn-primary">Post</button>
-                                </div>
-                            </form>
-                            <div class="comment-children"></div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="d-flex justify-content-between">
-                        <span>User</span>
-                        <span>Release</span>
-                    </div>
-                    <div class="mt-1">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
+                    <form method="post" action="/comment/">
+                    {% csrf_token %}
+                    {{ form.chapter }}
+                    <input name="book" type="hidden" value="{{ book.id }}">
+                    <input name="chapter" type="hidden" value="{{ chapter.number }}">
+                    <input name="page" type="hidden" value="{{ page }}">
+                    <input name="parent" type="hidden" value="{{ comment.id }}">
+                    <div class="form-group mb-1">
+                        {{ form.content }}
                     </div>
                     <div class="d-flex justify-content-end mb-2">
-                        <button class="btn btn-primary btn-sm">Reply</button>
+                        <button type="submit" class="btn btn-primary {% if not user.is_authenticated %}disabled{% endif %}">Reply</button>
                     </div>
-                    <form hidden>
-                        <div class="form-group mb-1">
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="d-flex justify-content-end mb-2">
-                            <button type="submit" class="btn btn-primary">Post</button>
-                        </div>
-                    </form>
-                    <div class="comment-children"></div>
+                </form>
                 </div>
+                    {% endif %}
+                {% endfor %}
+
+
             </div>
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    {% if page != 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/1" tabindex="-1">First</a>
                     </li>
+                    {% endif %}
+                    {% if page > 2 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-2" }}">{{ page|add:"-2" }}</a>
+                    </li>
+                    {% endif %}
+                    {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-1" }}">{{ page|add:"-1" }}</a>
+                    </li>
+                    {% endif %}
                     <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
+                        <a class="page-link" href="#">{{ page }}</a>
                     </li>
+                     {% if page < secondtolast %}
                     <li class="page-item">
-                        <a class="page-link" href="#">2</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"1" }}">{{ page|add:"1"}}</a>
                     </li>
+                    {% endif %}
+                    {% if page < maxpage %}
                     <li class="page-item">
-                        <a class="page-link" href="#">3</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"2" }}">{{ page|add:"2"}}</a>
                     </li>
+                    {% endif %}
+                    {% if page != maxpage %}
                     <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ maxpage }}">Last</a>
                     </li>
+                     {%  endif %}
                 </ul>
             </nav>
         </div>

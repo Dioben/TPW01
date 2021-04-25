@@ -34,14 +34,11 @@ class Chapter(models.Model):
 
 
 class Comment(models.Model):
-    class Meta:
-        unique_together = (('author', 'chapter'),)
-
     author = models.ForeignKey(User,on_delete=DO_NOTHING)
     chapter = models.ForeignKey(Chapter, on_delete=CASCADE)
     content = models.CharField(max_length=1000)
     release = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey("self", default=None, null=True, on_delete=CASCADE)
+    parent = models.ForeignKey("self", blank=True, null=True, on_delete=CASCADE)
 
 
 class LastRead(models.Model):
