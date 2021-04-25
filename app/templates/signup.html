@@ -16,19 +16,22 @@
     <div class="login-clean">
         <form method="post" action=".">
             <h3>Sign up</h3>
-             {%  csrf_token %}
-              {% for field in form %}
-        <div class="form-group">
-        {{ field.label_tag }}<br>
-        {{ field }}
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-        </div>
-        {% endfor %}
+            {%  csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                <div class="d-flex">
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="ml-2 d-flex flex-column justify-content-center">
+                            <a data-toggle="tooltip" title="{{ field.help_text }}"><i class="fa fa-question-circle"></i></a>
+                        </div>
+                    {% endif %}
+                </div>
+                {% for error in field.errors %}
+                  <p style="color: red">{{ error }}</p>
+                {% endfor %}
+                </div>
+            {% endfor %}
             <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit">Sign up</button>
             </div>

@@ -85,7 +85,7 @@ body {
 }
 
 .login-clean h3 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .forgot {
@@ -272,6 +272,17 @@ a {
     color: #26709d;
 }
 
+.login-clean {
+    background-color: #181818;
+}
+
+.login-clean form {
+    background-color: #131313;
+}
+
+.login-clean form .form-control {
+    height: 42px;
+}
 
 
 
@@ -342,7 +353,7 @@ a {
 }
 
 .login-clean {
-    background: #f1f7fc;
+    /*background: #f1f7fc;*/
     padding: 200px 0;
     height: 1000vh;
     position: sticky;
@@ -352,10 +363,10 @@ a {
     max-width: 320px;
     width: 90%;
     margin: 0 auto;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     padding: 40px;
     border-radius: 4px;
-    color: #505e6c;
+    /*color: #505e6c;*/
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -366,7 +377,7 @@ a {
     /*color: rgb(244,71,107);*/
 }
 
-.login-clean form .form-control {
+/*.login-clean form .form-control {
     background: #f7f9fc;
     border: none;
     border-bottom: 1px solid #dfe7f1;
@@ -376,10 +387,10 @@ a {
     color: inherit;
     text-indent: 8px;
     height: 42px;
-}
+}*/
 
-.login-clean form .btn-primary {
-    /*background: #f4476b;*/
+/*.login-clean form .btn-primary {
+    !*background: #f4476b;*!
     border: none;
     border-radius: 4px;
     padding: 11px;
@@ -387,7 +398,7 @@ a {
     margin-top: 26px;
     text-shadow: none;
     outline: none !important;
-}
+}*/
 
 /* .login-clean form .btn-primary:hover,
 .login-clean form .btn-primary:active {

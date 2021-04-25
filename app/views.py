@@ -1,13 +1,12 @@
 import math
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.shortcuts import render, redirect
 
 from app.commonqueries import *
 from app.creationMethods import *
-from app.forms import ChapterPostForm, BookCreationForm, CommentForm
+from app.forms import ChapterPostForm, BookCreationForm, CommentForm, CustomUserCreationForm
 from app.models import *
 
 # Create your views here.
@@ -99,7 +98,7 @@ def chapterpage(request, book, number, page):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -108,7 +107,7 @@ def signup(request):
             login(request, user)
             return redirect('/')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form': form})
 
 
