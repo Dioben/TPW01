@@ -38,13 +38,14 @@ def bookpage(request, pk):
     data = {'book': Book.objects.select_related().get(pk=pk), 'lastread': 0, 'isauthor': False}
     data['chapters'] = Chapter.objects.only("title", "number", "release").filter(novel=data['book'])
     data['reviews'] = Review.objects.filter(novel=data['book']).select_related('author')
+    data['rating'] = str(round(data['book'].scoretotal/data['book'].reviewcount,1))
     if request.user.is_authenticated:
         possiblereview = Review.objects.filter(author=request.user, novel_id=pk)
         data['isauthor'] = request.user == data['book'].author
         if possiblereview.exists():
-            data['reviewform'] = ReviewForm(possiblereview.get())
+            data['form'] = ReviewForm(instance=possiblereview.get(),initial={'novel':pk})
         else:
-            data['reviewform'] = ReviewForm()  # do not render this if author or nonauth'd
+            data['form'] = ReviewForm(initial={'novel':pk})  # do not render this if author or nonauth'd
         lastread = LastRead.objects.filter(book_id=pk, author=request.user)
         if lastread.exists():
             data['lastread'] = lastread.get().chapter
@@ -120,8 +121,6 @@ def bookmark(request):
 
 
 def createReview(request):
-    if 'novel' not in request.POST:
-        return redirect("/")
     if request.user.is_authenticated:
         reviewPOST(request)
     return redirect(f"/book/{request.POST['novel']}/")
