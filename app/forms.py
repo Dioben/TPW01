@@ -1,11 +1,15 @@
 from django.forms import ModelForm, HiddenInput, TextInput, Textarea, CharField, PasswordInput
+from django import forms
 from app.models import *
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField
 from django.contrib.auth import password_validation
 from django.utils.translation import gettext, gettext_lazy as _
 
-
 class ReviewForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+        self.fields['text'].strip = False
+
     class Meta:
         model = Review
         fields = ['rating', 'text', 'novel']
@@ -13,17 +17,25 @@ class ReviewForm(ModelForm):
 
 
 class ChapterPostForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ChapterPostForm, self).__init__(*args, **kwargs)
+        self.fields['text'].strip = False
+
+    novel = forms.IntegerField(widget=HiddenInput)
     class Meta:
         model = Chapter
-        fields = ['title', 'text', 'novel']
+        fields = ['title', 'text']
         widgets = {
             'title': TextInput(attrs={'class': 'form-control'}),
             'text': Textarea(attrs={'class': 'form-control'}),
-            'novel': HiddenInput()
         }
 
 
 class BookCreationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BookCreationForm, self).__init__(*args, **kwargs)
+        self.fields['description'].strip = False
+
     class Meta:
         model = Book
         fields = ['title', 'description']
@@ -33,6 +45,10 @@ class BookCreationForm(ModelForm):
         }
 
 class CommentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields['content'].strip = False
+
     class Meta:
         model = Comment
         fields = ['chapter','content']

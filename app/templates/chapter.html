@@ -29,26 +29,25 @@
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
             <nav aria-label="pagination">
-                <ul class="pagination justify-content-between">
-                    <li class="page-item {% if not previous %}disabled" {% endif %}>
+                 <ul class="pagination justify-content-between">
+                    <li class="page-item {% if not previous %}disabled {% endif %}">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
                     </li>
-                    <li class="page-item {% if next <= book.chapters %}disabled {% endif %}">
+                    <li class="page-item {% if next > book.chapters %}disabled {% endif %}">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
                     </li>
                 </ul>
             </nav>
             <div class="separator"></div>
-            <div class="chapter-content-content">
-                {{ chapter.text }}
+            <div class="chapter-content-content" style="white-space: pre-wrap">{{ chapter.text }}
             </div>
             <div class="separator"></div>
             <nav aria-label="pagination">
                  <ul class="pagination justify-content-between">
-                    <li class="page-item {% if not previous %}disabled" {% endif %}>
+                    <li class="page-item {% if not previous %}disabled {% endif %}">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
                     </li>
-                    <li class="page-item {% if next <= book.chapters %}disabled {% endif %}">
+                    <li class="page-item {% if next > book.chapters %}disabled {% endif %}">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
                     </li>
                 </ul>
