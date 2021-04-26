@@ -24,7 +24,9 @@
                             <a href="/bookeditor/{{ book.id }}/" class="btn btn-primary btn-sm m-1"><i class="fa fa-pencil"></i>&nbsp;Edit Book</a>
                             <a href="/deletebook/{{ book.id }}/" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i>&nbsp;Delete Book</a>
                         {% endif %}
-                        <button class="btn btn-primary m-1" type="button"><i class="fa fa-play"></i>&nbsp;Continue Reading</button>
+                    <form action="/chapter/{{ book.id }}/{% if not lastread %}1{% else %}{{ lastread }}{% endif %}/" method="get">
+                        <button class="btn btn-primary m-1" type="submit"><i class="fa fa-play"></i>&nbsp;Continue Reading</button>
+                    </form>
                         <form class="d-flex" action="/bookmarkpress/" method="post">
                             {% csrf_token %}
                             <input type="hidden" value="{{ book.id }}" name="bookid">
@@ -58,7 +60,7 @@
                     <div class="d-flex">
                         <div class="flex-grow-1">
                             <div class="col d-flex justify-content-between">
-                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/">{{ chapter.title }}</a>
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/">{% if chapter.number == lastread %}LAST READ, PUT ICON HERE{% endif %}{{ chapter.title }}</a>
                                 <a href="/chapter/{{ book.id }}/{{ chapter.number }}/"><small>{{ chapter.release }}</small></a>
                             </div>
                             <div class="separator-thin"></div>

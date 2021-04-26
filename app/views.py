@@ -56,7 +56,7 @@ def bookpage(request, pk,page):
             data['form'] = ReviewForm(initial={'novel': pk})  # do not render this if author or nonauth'd
         lastread = LastRead.objects.filter(book_id=pk, author=request.user)
         if lastread.exists():
-            data['lastread'] = lastread.get().chapter
+            data['lastread'] = lastread.get().chapter.number
         data['bookmarked'] = Book.objects.filter(pk=pk, bookmarks=request.user).exists()
     else:
         data['bookmarked'] = False
@@ -118,6 +118,15 @@ def chapterpage(request, book, number, page):
     book = chapter.novel
     author = book.author
     form = CommentForm()
+    if request.user.is_authenticated:
+        lastread = LastRead.objects.filter(book_id=book, author=request.user)
+        if lastread.exists():
+            lastread = lastread.get()
+            lastread.chapter = chapter
+            lastread.save()
+        else:
+            lastread = LastRead(author=request.user, book=book, chapter=chapter)
+            lastread.save()
     form.chapter = chapter
     pages = Comment.objects.filter(chapter_id=chapter.id).count() / COMMENTSPERPAGE
     if pages:
