@@ -15,7 +15,7 @@ from app.models import *
 # TODO
 # comment deleting
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
-# user profile page allowing new-book creation
+# fix comment 404 error on chapter deletion
 
 COMMENTSPERPAGE = 15
 REVIEWSPERPAGE = 25
