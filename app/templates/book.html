@@ -99,6 +99,9 @@
                             {{ form.novel }}
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
+                            {% if userreviewid != None %}
+                                <a style="color: white" class="btn btn-danger ml-1" href="/deletereview/{{ userreviewid }}/">Delete</a>
+                            {% endif %}
                         </div>
                     </form>
                 </div>

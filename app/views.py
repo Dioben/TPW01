@@ -48,6 +48,7 @@ def bookpage(request, pk,page):
         data['isauthor'] = request.user == data['book'].author
         if possiblereview.exists():
             data['form'] = ReviewForm(instance=possiblereview.get(),initial={'novel':pk})
+            data['userreviewid'] = possiblereview.get().id
         else:
             data['form'] = ReviewForm(initial={'novel': pk})  # do not render this if author or nonauth'd
         lastread = LastRead.objects.filter(book_id=pk, author=request.user)
