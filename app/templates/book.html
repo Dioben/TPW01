@@ -60,7 +60,7 @@
                     <div class="d-flex">
                         <div class="flex-grow-1">
                             <div class="col d-flex justify-content-between">
-                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/">{% if chapter.number == lastread %}LAST READ, PUT ICON HERE{% endif %}{{ chapter.title }}</a>
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/">{% if chapter.number == lastread %}<i class="fa fa-play" style="font-size: 0.7em"></i> {% endif %}{{ chapter.title }}</a>
                                 <a href="/chapter/{{ book.id }}/{{ chapter.number }}/"><small>{{ chapter.release }}</small></a>
                             </div>
                             <div class="separator-thin"></div>
