@@ -50,5 +50,8 @@ def commentspage(chapter,page=1, total=15):
     return list(chain(comments,childcomments))
 
 
+def reviewpage(book,page=1,total=25):
+    return Review.objects.filter(novel=book)[(page - 1) * total:page * total]
+
 def bookmarksbyuser(user):
     return Book.objects.filter(bookmarks=user)

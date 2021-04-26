@@ -25,7 +25,7 @@ from app.models import *
 # REST for adding/removing/editing chapters
 
 COMMENTSPERPAGE = 15
-
+REVIEWSPERPAGE = 25
 
 # HOME PAGE
 def index(request):
@@ -34,11 +34,20 @@ def index(request):
     return render(request, "index.html", data)
 
 
-def bookpage(request, pk):
-    data = {'book': Book.objects.select_related().get(pk=pk), 'lastread': 0, 'isauthor': False}
+def bookpage(request, pk,page):
+    data = {'book': Book.objects.select_related().get(pk=pk), 'lastread': 0, 'isauthor': False ,'page':page,'nextpage':page+1}
     data['chapters'] = Chapter.objects.only("title", "number", "release").filter(novel=data['book'])
-    data['reviews'] = Review.objects.filter(novel=data['book']).select_related('author')
+    data['reviews'] = reviewpage(data['book'],page,REVIEWSPERPAGE)
     data['rating'] = str(round(0 if data['book'].reviewcount == 0 else data['book'].scoretotal/data['book'].reviewcount, 1))
+    pages = Review.objects.filter(novel_id=pk).count() / REVIEWSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['maxpages'] = pages
+    data['secondtolast'] = pages-1
     if request.user.is_authenticated:
         possiblereview = Review.objects.filter(author=request.user, novel_id=pk)
         data['isauthor'] = request.user == data['book'].author
@@ -253,3 +262,7 @@ def postcomment(request):
         comment.save()
         return redirect(f'/chapter/{request.POST["book"]}/{request.POST["chapter"]}/{request.POST["page"]}')
     return HttpResponse("something went wrong", 404)
+
+
+def bookredir(request,pk):
+    return redirect(f'1/')
