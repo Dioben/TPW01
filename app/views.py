@@ -292,7 +292,7 @@ def postcomment(request):
         if 'parent' in request.POST:
             comment.parent = Comment.objects.get(pk=request.POST['parent'])
         comment.save()
-        return redirect(f'/chapter/{request.POST["book"]}/{request.POST["chapter"]}/{request.POST["page"]}')
+        return redirect(f'/chapter/{request.POST["book"]}/{request.POST["chapternumber"]}/{request.POST["page"]}')
     return HttpResponse("something went wrong", 404)
 
 
