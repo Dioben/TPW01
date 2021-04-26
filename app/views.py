@@ -55,6 +55,7 @@ def bookpage(request, pk,page):
         if lastread.exists():
             data['lastread'] = lastread.get().chapter.number
         data['bookmarked'] = Book.objects.filter(pk=pk, bookmarks=request.user).exists()
+        data['isstaff'] = request.user.is_staff
     else:
         data['bookmarked'] = False
     return render(request, 'book.html', data)
@@ -135,7 +136,7 @@ def chapterpage(request, book, number, page):
     data = {'chapter': chapter, 'book': book, 'author': author,
             'comments': commentspage(chapter.id, page, COMMENTSPERPAGE),
             'isauthor': author == request.user, 'next': chapter.number + 1, 'previous': chapter.number - 1,
-            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1, "user": request.user}
+            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1, "isstaff": request.user.is_staff}
     return render(request, 'chapter.html', data)
 
 

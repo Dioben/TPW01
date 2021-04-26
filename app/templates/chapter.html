@@ -22,6 +22,8 @@
                         <form class="d-flex" action="/chaptereditor/{{ book.id }}/{{ chapter.id }}/">
                             <button class="btn btn-primary btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
                         </form>
+                    {% endif %}
+                    {% if isauthor or isstaff %}
                         <form class="d-flex" action="/deletechapter/{{ chapter.id }}/">
                             <button class="btn btn-danger btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
                         </form>
@@ -95,7 +97,7 @@
                             </div>
                             <div class="d-flex justify-content-end mb-2">
                                 <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#comment{{ comment.id }}" aria-expanded="false" aria-controls="comment{{ comment.id }}">Reply</button>
-                                {% if comment.author == user %}
+                                {% if comment.author == user or isstaff %}
                                     <form action="/deletecomment/{{ comment.id }}/" method="post">
                                         {% csrf_token %}
                                         <button class="btn btn-danger btn-sm ml-1" type="submit">Delete</button>
@@ -130,7 +132,7 @@
                                             <div class="mt-1">
                                                 {{ childcomment.content }}
                                             </div>
-                                            {% if childcomment.author == user %}
+                                            {% if childcomment.author == user or isstaff %}
                                                 <div class="d-flex justify-content-end mb-2">
                                                     <form action="/deletecomment/{{ childcomment.id }}/" method="post">
                                                         {% csrf_token %}
