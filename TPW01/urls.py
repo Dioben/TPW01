@@ -33,7 +33,7 @@ urlpatterns = [
     path("logout/",auth_views.LogoutView.as_view(next_page="/"), name="log out"),
     path('signup/', views.signup, name="sign up"),
     path('bookmarkpress/',views.bookmark, name="bookmark press"),
-    path('chaptereditor/<int:book>/<str:chapter>',views.chaptereditor, name="chapter editor"),
+    path('chaptereditor/<int:book>/<str:chapter>/',views.chaptereditor, name="chapter editor"),
     path('bookeditor/<int:book>/', views.bookEditor, name="book editor"),
     path('submitbook/<int:book>/',views.submitbook, name="book poster"),
     path('deletebook/<int:book>/',views.deletebook, name="book deleter"),

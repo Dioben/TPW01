@@ -38,14 +38,14 @@ def bookpage(request, pk):
     data = {'book': Book.objects.select_related().get(pk=pk), 'lastread': 0, 'isauthor': False}
     data['chapters'] = Chapter.objects.only("title", "number", "release").filter(novel=data['book'])
     data['reviews'] = Review.objects.filter(novel=data['book']).select_related('author')
-    data['rating'] = str(round(data['book'].scoretotal/data['book'].reviewcount,1))
+    data['rating'] = str(round(0 if data['book'].reviewcount == 0 else data['book'].scoretotal/data['book'].reviewcount, 1))
     if request.user.is_authenticated:
         possiblereview = Review.objects.filter(author=request.user, novel_id=pk)
         data['isauthor'] = request.user == data['book'].author
         if possiblereview.exists():
             data['form'] = ReviewForm(instance=possiblereview.get(),initial={'novel':pk})
         else:
-            data['form'] = ReviewForm(initial={'novel':pk})  # do not render this if author or nonauth'd
+            data['form'] = ReviewForm(initial={'novel': pk})  # do not render this if author or nonauth'd
         lastread = LastRead.objects.filter(book_id=pk, author=request.user)
         if lastread.exists():
             data['lastread'] = lastread.get().chapter
@@ -56,7 +56,7 @@ def bookpage(request, pk):
 
 
 def topRated(request, page):
-    data = {'sorttype': 'Books By Rating', 'books': bookbyrating(page)}
+    data = {'sorttype': 'Top Books', 'books': bookbyrating(page)}
     return render(request, 'listing.html', data)
 
 
@@ -66,7 +66,7 @@ def popularBooks(request, page):
 
 
 def newBooks(request, page):
-    data = {'sorttype': 'New Books', 'books': bookbynew(page)}
+    data = {'sorttype': 'Latest Books', 'books': bookbynew(page)}
     return render(request, 'listing.html', data)
 
 
@@ -247,7 +247,7 @@ def postcomment(request):
         return HttpResponse("no account", 403)
     form = CommentForm(request.POST)
     if form.is_valid():
-        comment = Comment(author=request.user, content=form.cleaned_data['content'],chapter=form.cleaned_data['chapter'])
+        comment = Comment(author=request.user, content=form.cleaned_data['content'], chapter=form.cleaned_data['chapter'])
         if 'parent' in request.POST:
             comment.parent = Comment.objects.get(pk=request.POST['parent'])
         comment.save()

@@ -17,7 +17,7 @@
                 <div class="separator"></div>
             </div>
             <div class="book-content-content">
-                <form action="/submitbook/{{ bookid }}" method="post">
+                <form action="/submitbook/{{ bookid }}/" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ form.title.label_tag }}

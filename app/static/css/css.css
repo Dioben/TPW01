@@ -291,9 +291,10 @@ a {
 
 .description {
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
-.container-custom .description {
+.list-content .description {
    overflow: hidden;
    text-overflow: ellipsis;
    display: -webkit-box;
@@ -319,11 +320,34 @@ a {
 
 .book-header > .description {
     background-color: #131313;
-    padding: 10px 50px 10px 50px;
+    padding: 20px 50px 0 50px;
     /*border-left: 100vw solid #131313;*/
     /*border-right: 100vw solid #131313;*/
     /*margin: 0 -100vw 0 -100vw;*/
 }
+
+.chapter-text {
+    white-space: pre-wrap;
+}
+
+.book-header a {
+    color: #CBCBCB;
+}
+
+.navbar {
+    padding: .5em 5px;
+}
+
+.navbar-brand {
+    padding: 0 8px;
+}
+
+
+
+
+
+
+
 
 
 
@@ -643,7 +667,7 @@ a {
 }
 
 .navigation-clean-button .actions .login {
-    margin-right: 1rem;
+    /*margin-right: 1rem;*/
     text-decoration: none;
     /*color: #465765;*/
 }

@@ -16,15 +16,18 @@
                 <div>
                     <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
-                            <a href="/book/{{ chapter.novel.id }}">{{ chapter.novel.title }}</a>
-                            <a href="/chapter/{{ chapter.novel.id }}/{{ chapter.number }}">{{ chapter.number }} - {{ chapter.title }}</a></div>
+                            <div class="d-flex justify-content-between">
+                                <a href="/book/{{ chapter.novel.id }}/"><b>{{ chapter.novel.title }}</b></a>
+                                <a href="/chapter/{{ chapter.novel.id }}/{{ chapter.number }}/">{{ chapter.title }}</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="separator"></div>
                 </div>
                 {% endfor %}
             </div>
             <div class="d-flex justify-content-center list-button">
-                <a class="btn btn-primary btn-block" href="/new/1">More Updates</a>
+                <a class="btn btn-primary btn-block" href="/new/1/">More Updates</a>
             </div>
         </div>
     </div>
@@ -40,10 +43,10 @@
                 <div>
                     <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
-                            <a href="/book/{{ book.id }}">{{ book.title }}</a>
                             <div class="d-flex justify-content-between">
-                                <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
-                                <span>Nº Followers</span>
+                                <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
+                                <span>Score: {% if book.rating == None %}0{% else %}{{ book.rating }}{% endif %}/100</span>
+{#                                <span>Nº Followers</span>#}
                             </div>
                             <span class="mt-3 description">{{ book.description }}</span>
                         </div>
@@ -53,10 +56,11 @@
                 {% endfor %}
             </div>
             <div class="d-flex justify-content-center list-button">
-                <a class="btn btn-primary btn-block" href="/hot/1">More Rising</a>
+                <a class="btn btn-primary btn-block" href="/hot/1/">More Rising</a>
             </div>
         </div>
     </div>
+
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
             <div class="container-custom-header">
@@ -68,10 +72,10 @@
                 <div>
                     <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
                         <div class="col d-flex flex-column">
-                            <a href="/book/{{ book.id }}">{{ book.title }}</a>
                             <div class="d-flex justify-content-between">
-                                <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
-                                <span>Nº Followers</span>
+                                <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
+                                <span>Score: {% if book.rating == None %}0{% else %}{{ book.rating }}{% endif %}/100</span>
+{#                                <span>Nº Followers</span>#}
                             </div>
                             <span class="mt-3 description">{{ book.description }}</span>
                         </div>

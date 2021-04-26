@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}TPW01 - Book title{% endblock %}
+{% block title %}TPW01 - {{ book.title }}{% endblock %}
 
 {% block content %}
 <div class="col">
@@ -8,7 +8,7 @@
         <div class="d-flex">
             {% comment %}<img class="align-self-center mr-3 book-big-img">{% endcomment %}
             <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
-                <h5 class="mt-0 mb-0">{{ book.title }}</h5>
+                <h5 class="mt-0 mb-0"><b>{{ book.title }}</b></h5>
                 <span>by <a>{{ book.author }}</a></span>
                 <div class="d-flex mt-2">
                     <span class="book-tag-title pl-0">Score: {% if rating == None %}0{% else %}{{ rating }}{% endif %}/100</span>
@@ -20,8 +20,8 @@
                     <div class="d-flex flex-column">
                         <div class="flex-grow-1"></div>
                         {% if isauthor %}
-                            <a href="/bookeditor/{{ book.id }}" class="btn btn-primary btn-sm m-1"><i class="fa fa-pencil"></i>&nbsp;Edit Book</a>
-                            <a href="/deletebook/{{ book.id }}" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i>&nbsp;Delete Book</a>
+                            <a href="/bookeditor/{{ book.id }}/" class="btn btn-primary btn-sm m-1"><i class="fa fa-pencil"></i>&nbsp;Edit Book</a>
+                            <a href="/deletebook/{{ book.id }}/" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i>&nbsp;Delete Book</a>
                         {% endif %}
                         <button class="btn btn-primary m-1" type="button"><i class="fa fa-play"></i>&nbsp;Continue Reading</button>
                         <form class="d-flex" action="/bookmarkpress/" method="post">
@@ -40,8 +40,7 @@
             </div>
         </div>
         <div class="book-header-separator"></div>
-        <div class="description">
-            {{ book.description }}
+        <div class="description">{{ book.description }}
         </div>
     </div>
     <div class="col-xl-12 offset-xl-0">
@@ -49,7 +48,7 @@
             <div class="container-custom-header d-flex justify-content-between">
                 <span>Chapters</span>
                 {% if isauthor %}
-                    <a href="/chaptereditor/{{ book.id }}/new" class="btn btn-primary btn-sm">New chapter</a>
+                    <a href="/chaptereditor/{{ book.id }}/new/" class="btn btn-primary btn-sm">New chapter</a>
                 {% endif %}
             </div>
             <div class="separator"></div>
@@ -58,14 +57,14 @@
                     <div class="d-flex">
                         <div class="flex-grow-1">
                             <div class="col d-flex justify-content-between">
-                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}">{{ chapter.title }}</a>
-                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}"><small>{{ chapter.release }}</small></a>
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/">{{ chapter.title }}</a>
+                                <a href="/chapter/{{ book.id }}/{{ chapter.number }}/"><small>{{ chapter.release }}</small></a>
                             </div>
                             <div class="separator-thin"></div>
                         </div>
                         {% if isauthor %}
-                            <a href="/chaptereditor/{{ book.id }}/{{ chapter.number }}" class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</a>
-                            <a href="/deletechapter/{{ chapter.id }}" class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</a>
+                            <a href="/chaptereditor/{{ book.id }}/{{ chapter.number }}/" class="btn btn-primary btn-sm ml-2 mt-3 mb-2">Edit</a>
+                            <a href="/deletechapter/{{ chapter.id }}/" class="btn btn-danger btn-sm ml-2 mt-3 mb-2">Delete</a>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -73,36 +72,36 @@
         </div>
     </div>
     <div class="col-xl-12 offset-xl-0">
-
         <div class="container-custom">
-{% if  user.is_authenticated and not isauthor%}
-            <div class="container-custom-header">
-                <span>Leave a review</span>
-                <div class="separator"></div>
-            </div>
-            <div class="review-form-content">
-
-                <form action="/review/" method="post">
-                    <div class="form-group">
-                        {% csrf_token %}
-                        <!--<label class="mb-0" for="review-form-score">Score</label>
-                        <input type="number" class="form-control w-25" id="review-form-score" placeholder="0-100">-->
-                        {{ form.rating }}
-                    </div>
-                    <div class="form-group">
-                       <!-- <label class="mb-0" for="review-form-content">Review content</label>
-                        <textarea class="form-control" id="review-form-content" rows="3"></textarea> -->
-                        {{ form.text }}
-                    </div>
-                        {{ form.novel }}
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-                {% elif not user.is_authenticated %}<span>Log in to review!</span>
-                {% elif isauthor %}<span>Authors are not allowed to review their own works</span>
-                {% endif %}
-            </div>
+            {% if  user.is_authenticated and not isauthor%}
+                <div class="container-custom-header">
+                    <span>Leave a review</span>
+                    <div class="separator"></div>
+                </div>
+                <div class="review-form-content">
+                    <form action="/review/" method="post">
+                        <div class="form-group">
+                            {% csrf_token %}
+                            <!--<label class="mb-0" for="review-form-score">Score</label>
+                            <input type="number" class="form-control w-25" id="review-form-score" placeholder="0-100">-->
+                            {{ form.rating.label_tag }}
+                            {{ form.rating }}
+                        </div>
+                        <div class="form-group">
+                           <!-- <label class="mb-0" for="review-form-content">Review content</label>
+                            <textarea class="form-control" id="review-form-content" rows="3"></textarea> -->
+                            {{ form.text.label_tag }}
+                            {{ form.text }}
+                        </div>
+                            {{ form.novel }}
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            {% elif not user.is_authenticated %}<span>Log in to review!</span>
+            {% elif isauthor %}<span>Authors are not allowed to review their own works.</span>
+            {% endif %}
         </div>
     </div>
     <div class="col-xl-12 offset-xl-0">
@@ -112,32 +111,20 @@
                 <div class="separator"></div>
             </div>
             <div class="review-list-content">
+                {% for review in reviews %}
                 <div>
                     <div class="col d-flex flex-column">
-                        <span>User</span>
+                        <span>{{ review.author }}</span>
                         <div class="d-flex justify-content-between">
-                            <span>Rating</span>
-                            <span>Release</span>
+                            <span>Score: {{ review.rating }}/100</span>
+                            <span><small>{{ review.release }}</small></span>
                         </div>
-                        <div class="mt-3">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
+                        <div class="mt-3 description">{{ review.text }}
                         </div>
                     </div>
                     <div class="separator"></div>
                 </div>
-                <div>
-                    <div class="col d-flex flex-column">
-                        <span>User</span>
-                        <div class="d-flex justify-content-between">
-                            <span>Rating</span>
-                            <span>Release</span>
-                        </div>
-                        <div class="mt-3">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa dolor, ullamcorper a velit a, ultrices fringilla justo. Nulla ac massa a velit luctus rutrum sit amet eu nisi. Nulla lacinia id urna dapibus facilisis. Sed ut turpis eget massa molestie euismod. Cras sollicitudin lacus non blandit viverra. Phasellus ut lacus non elit porttitor bibendum ultrices malesuada purus. Sed eu venenatis sem. Nulla suscipit, arcu ut porttitor volutpat, felis sem convallis lectus, et eleifend lorem dolor ac ex. Nullam in molestie ligula. Cras vitae mi porta, sagittis nunc et, fringilla metus. Fusce in enim ac leo luctus consectetur non a tellus. Vivamus vulputate eros molestie lacus dapibus efficitur.
-                        </div>
-                    </div>
-                    <div class="separator"></div>
-                </div>
+                {% endfor %}
             </div>
             <nav aria-label="pagination">
                 <ul class="pagination justify-content-center">

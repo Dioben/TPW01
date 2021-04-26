@@ -1,4 +1,4 @@
-from django.forms import ModelForm, HiddenInput, TextInput, Textarea, CharField, PasswordInput
+from django.forms import ModelForm, HiddenInput, TextInput, Textarea, CharField, PasswordInput, NumberInput
 from django import forms
 from app.models import *
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField
@@ -6,23 +6,18 @@ from django.contrib.auth import password_validation
 from django.utils.translation import gettext, gettext_lazy as _
 
 class ReviewForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ReviewForm, self).__init__(*args, **kwargs)
-        self.fields['text'].strip = False
-
     novel = forms.IntegerField(widget=HiddenInput)
-
     class Meta:
 
         model = Review
-        fields = ['rating', 'text',]
+        fields = ['rating', 'text']
+        widgets = {
+            'rating': NumberInput(attrs={'class': 'form-control w-25'}),
+            'text': Textarea(attrs={'class': 'form-control', 'rows': "3"})
+        }
 
 
 class ChapterPostForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ChapterPostForm, self).__init__(*args, **kwargs)
-        self.fields['text'].strip = False
-
     novel = forms.IntegerField(widget=HiddenInput)
     class Meta:
         model = Chapter
@@ -34,10 +29,6 @@ class ChapterPostForm(ModelForm):
 
 
 class BookCreationForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(BookCreationForm, self).__init__(*args, **kwargs)
-        self.fields['description'].strip = False
-
     class Meta:
         model = Book
         fields = ['title', 'description']
@@ -47,14 +38,10 @@ class BookCreationForm(ModelForm):
         }
 
 class CommentForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(CommentForm, self).__init__(*args, **kwargs)
-        self.fields['content'].strip = False
-
     class Meta:
         model = Comment
-        fields = ['chapter','content']
-        widgets = {'chapter':HiddenInput(), 'content':Textarea(attrs={'class': 'form-control','rows':"3"})}
+        fields = ['chapter', 'content']
+        widgets = {'chapter': HiddenInput(), 'content': Textarea(attrs={'class': 'form-control', 'rows': "3"})}
 
 
 class CustomAuthenticationForm(AuthenticationForm):

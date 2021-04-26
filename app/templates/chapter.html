@@ -1,54 +1,58 @@
 {% extends "layout.html" %}
 
-{% block title %} {{ chapter.number }} - {{ chapter.title }}{% endblock %}
+{% block title %} TPW01 - {{ chapter.title }}{% endblock %}
+
 {% block content %}
 <div class="col">
-    <div class="d-flex mb-2">
-        {% comment %}<img class="align-self-center mr-3 book-medium-img">{% endcomment %}
-        <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
-            <div class="chapter-book-title mb-3">
-                <h5><a href="/book/{{ book.id }}">{{ book.title }}</a></h5>
-                <span>by <!--<a href="#">-->{{ author.username }}<!--</a>--></span>
+    <div class="book-header col">
+        <div class="d-flex pb-2">
+            {% comment %}<img class="align-self-center mr-3 book-medium-img">{% endcomment %}
+            <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
+                <div class="chapter-book-title mb-3">
+                    <h5><a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a></h5>
+                    <span>by <!--<a href="#">-->{{ author.username }}<!--</a>--></span>
+                </div>
+                <h4><b>{{ chapter.title }}</b></h4>
             </div>
-            <h4>{{ chapter.number }} - {{ chapter.title }}</h4>
-        </div>
-        <div class="d-flex justify-content-end flex-grow-1">
-            <div class="d-flex flex-column">
-                <div class="flex-grow-1"></div>
-                {% if isauthor %}
-                    <form action="/chaptereditor/{{ book.id }}/{{ chapter.id }}">
-                    <button class="btn btn-primary btn-sm m-1" type="submit"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
-                    </form>
-                    <form action="/deletechapter/{{ chapter.id }}">
-                    <button class="btn btn-danger btn-sm m-1" type="submit"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
-                </form>
-                {% endif %}
+            <div class="d-flex justify-content-end flex-grow-1">
+                <div class="d-flex flex-column">
+                    <div class="flex-grow-1"></div>
+                    {% if isauthor %}
+                        <form class="d-flex" action="/chaptereditor/{{ book.id }}/{{ chapter.id }}/">
+                            <button class="btn btn-primary btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
+                        </form>
+                        <form class="d-flex" action="/deletechapter/{{ chapter.id }}/">
+                            <button class="btn btn-danger btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
         </div>
+        <div class="book-header-separator"></div>
     </div>
     <div class="col-xl-12 offset-xl-0">
         <div class="container-custom">
             <nav aria-label="pagination">
                  <ul class="pagination justify-content-between">
                     <li class="page-item {% if not previous %}disabled {% endif %}">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}/" tabindex="-1">« Previous Chapter</a>
                     </li>
                     <li class="page-item {% if next > book.chapters %}disabled {% endif %}">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}/">Next Chapter »</a>
                     </li>
                 </ul>
             </nav>
             <div class="separator"></div>
-            <div class="chapter-content-content" style="white-space: pre-wrap">{{ chapter.text }}
+            <div class="chapter-text m-2">{{ chapter.text }}
             </div>
             <div class="separator"></div>
             <nav aria-label="pagination">
                  <ul class="pagination justify-content-between">
                     <li class="page-item {% if not previous %}disabled {% endif %}">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}" tabindex="-1">« Previous Chapter</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ previous }}/" tabindex="-1">« Previous Chapter</a>
                     </li>
                     <li class="page-item {% if next > book.chapters %}disabled {% endif %}">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}">Next Chapter »</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ next }}/">Next Chapter »</a>
                     </li>
                 </ul>
             </nav>
@@ -130,17 +134,17 @@
                 <ul class="pagination justify-content-center">
                     {% if page != 1 %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/1" tabindex="-1">First</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/1/" tabindex="-1">First</a>
                     </li>
                     {% endif %}
                     {% if page > 2 %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-2" }}">{{ page|add:"-2" }}</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-2" }}/">{{ page|add:"-2" }}</a>
                     </li>
                     {% endif %}
                     {% if page > 1 %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-1" }}">{{ page|add:"-1" }}</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"-1" }}/">{{ page|add:"-1" }}</a>
                     </li>
                     {% endif %}
                     <li class="page-item active">
@@ -148,17 +152,17 @@
                     </li>
                      {% if page < secondtolast %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"1" }}">{{ page|add:"1"}}</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"1" }}/">{{ page|add:"1"}}</a>
                     </li>
                     {% endif %}
                     {% if page < maxpage %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"2" }}">{{ page|add:"2"}}</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"2" }}/">{{ page|add:"2"}}</a>
                     </li>
                     {% endif %}
                     {% if page != maxpage %}
                     <li class="page-item">
-                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ maxpage }}">Last</a>
+                        <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ maxpage }}/">Last</a>
                     </li>
                      {%  endif %}
                 </ul>

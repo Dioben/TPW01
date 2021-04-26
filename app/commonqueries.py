@@ -35,7 +35,8 @@ def bookrisingpop(page=1, total=20):
 
 
 def bookbynew(page=1, total=20):
-    return Book.objects.reverse()[(page - 1) * total:page * total]
+    return Chapter.objects.order_by("-release").select_related()[(page - 1) * total:page * total]
+    # return Book.objects.reverse()[(page - 1) * total:page * total]
 
 
 def reviewbyuser(user):
