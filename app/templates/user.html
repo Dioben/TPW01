@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}TPW01 - User Profile{% endblock %}
 
@@ -23,11 +24,12 @@
                 <div class="list-content">
                     {% for book in books %}
                     <div>
-                        <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
+                        <div class="d-flex flex-nowrap">
+                            <img src="{% static '/images/defaultcover.png' %}">
                             <div class="col d-flex flex-column justify-content-between">
                                 <div class="d-flex flex-column">
+                                    <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                     <div class="d-flex justify-content-between">
-                                        <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                         <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
 {#                                        <span>Nº Followers</span>#}
                                     </div>
@@ -60,9 +62,10 @@
                     {% for book in bookmarks %}
                         <div>
                             <div class="d-flex flex-nowrap">
+                                <img src="{% static '/images/defaultcover.png' %}">
                                 <div class="col d-flex flex-column">
+                                    <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                     <div class="d-flex justify-content-between">
-                                        <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                         <span>Score: {% if book.rating == None %}0{% else %}book.rating{% endif %}/100</span>
 {#                                        <span>Nº Followers</span>#}
                                     </div>

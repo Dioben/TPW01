@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %} TPW01 - {{ chapter.title }}{% endblock %}
 
@@ -6,7 +7,7 @@
 <div class="col">
     <div class="book-header col">
         <div class="d-flex pb-2">
-            {% comment %}<img class="align-self-center mr-3 book-medium-img">{% endcomment %}
+            <img class="align-self-center mr-3 mt-2 book-medium-img" src="{% static '/images/defaultcover.png' %}">
             <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
                 <div class="chapter-book-title mb-3">
                     <h5><a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a></h5>

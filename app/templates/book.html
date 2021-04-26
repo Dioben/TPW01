@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}TPW01 - {{ book.title }}{% endblock %}
 
@@ -6,7 +7,7 @@
 <div class="col">
     <div class="book-header col">
         <div class="d-flex">
-            {% comment %}<img class="align-self-center mr-3 book-big-img">{% endcomment %}
+            <img class="align-self-center mr-3 mt-3 mb-3 book-big-img" src="{% static '/images/defaultcover.png' %}">
             <div class="media-body mt-3 mb-3 d-flex flex-column flex-grow-1">
                 <h5 class="mt-0 mb-0"><b>{{ book.title }}</b></h5>
                 <span>by <a>{{ book.author }}</a></span>

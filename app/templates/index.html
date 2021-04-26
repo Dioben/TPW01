@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}TPW01 - Home{% endblock %}
 
@@ -14,12 +15,13 @@
             <div class="list-content">
                 {% for chapter in newchaps %}
                 <div>
-                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
+                    <div class="d-flex flex-nowrap">
+                        <img src="{% static '/images/defaultcover.png' %}">
                         <div class="col d-flex flex-column">
-                            <div class="d-flex justify-content-between">
-                                <a href="/book/{{ chapter.novel.id }}/"><b>{{ chapter.novel.title }}</b></a>
-                                <a href="/chapter/{{ chapter.novel.id }}/{{ chapter.number }}/">{{ chapter.title }}</a>
-                            </div>
+                            <a href="/book/{{ chapter.novel.id }}/"><b>{{ chapter.novel.title }}</b></a>
+                            <a href="/chapter/{{ chapter.novel.id }}/{{ chapter.number }}/">{{ chapter.title }}</a>
+                            {% comment %}<div class="d-flex justify-content-between">
+                            </div>{% endcomment %}
                         </div>
                     </div>
                     <div class="separator"></div>
@@ -41,10 +43,11 @@
             <div class="list-content">
                 {% for book in rising %}
                 <div>
-                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
+                    <div class="d-flex flex-nowrap">
+                        <img src="{% static '/images/defaultcover.png' %}">
                         <div class="col d-flex flex-column">
+                            <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                             <div class="d-flex justify-content-between">
-                                <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                 <span>Score: {% if book.rating == None %}0{% else %}{{ book.rating }}{% endif %}/100</span>
 {#                                <span>Nº Followers</span>#}
                             </div>
@@ -70,10 +73,11 @@
             <div class="list-content">
                 {% for book in toprated %}
                 <div>
-                    <div class="d-flex flex-nowrap">{% comment %}<img>{% endcomment %}
+                    <div class="d-flex flex-nowrap">
+                        <img src="{% static '/images/defaultcover.png' %}">
                         <div class="col d-flex flex-column">
+                            <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                             <div class="d-flex justify-content-between">
-                                <a href="/book/{{ book.id }}/"><b>{{ book.title }}</b></a>
                                 <span>Score: {% if book.rating == None %}0{% else %}{{ book.rating }}{% endif %}/100</span>
 {#                                <span>Nº Followers</span>#}
                             </div>
