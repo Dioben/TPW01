@@ -15,12 +15,7 @@ from app.models import *
 # TODO
 # comment deleting
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
-# load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
-# top rated/ hot pages / new pages -> just needs the view I think
-# allow any user to save books for easy access in a following page -> bookmarked is a thing, just need to get a form or JS call going browser side
 # user profile page allowing new-book creation
-# book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
-# REST for making/deleting/editing (description and title only) a book
 
 COMMENTSPERPAGE = 15
 REVIEWSPERPAGE = 25
