@@ -135,7 +135,7 @@ def chapterpage(request, book, number, page):
     data = {'chapter': chapter, 'book': book, 'author': author,
             'comments': commentspage(chapter.id, page, COMMENTSPERPAGE),
             'isauthor': author == request.user, 'next': chapter.number + 1, 'previous': chapter.number - 1,
-            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1}
+            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1, "user": request.user}
     return render(request, 'chapter.html', data)
 
 
@@ -296,6 +296,19 @@ def postcomment(request):
         return redirect(f'/chapter/{request.POST["book"]}/{request.POST["chapternumber"]}/{request.POST["page"]}')
     return HttpResponse("something went wrong", 404)
 
+
+def deletecomment(request, pk):
+    if not request.user.is_authenticated:
+        return HttpResponse("Please log in", 403)
+    comment = Comment.objects.filter(pk=pk)
+    if not comment.exists():
+        return HttpResponse("Comment not found",404)
+    comment = comment.get()
+    if comment.author != request.user and not request.user.is_staff:
+        return HttpResponse("No delete permissions",403)
+    backurl = f'/chapter/{comment.chapter.novel.id}/{comment.chapter.number}/1/'
+    comment.delete()
+    return redirect(backurl)
 
 def bookredir(request,pk):
     return redirect(f'1/')

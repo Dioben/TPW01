@@ -95,6 +95,12 @@
                             </div>
                             <div class="d-flex justify-content-end mb-2">
                                 <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#comment{{ comment.id }}" aria-expanded="false" aria-controls="comment{{ comment.id }}">Reply</button>
+                                {% if comment.author == user %}
+                                    <form action="/deletecomment/{{ comment.id }}/" method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger btn-sm ml-1" type="submit">Delete</button>
+                                    </form>
+                                {% endif %}
                             </div>
                             <div class="collapse" id="comment{{ comment.id }}">
                                 <form method="post" action="/comment/">
@@ -121,9 +127,18 @@
                                                 <span><b>{{ childcomment.author }}</b></span>
                                                 <span><small>{{ childcomment.release }}</small></span>
                                             </div>
-                                            <div class="mt-1 mb-5">
+                                            <div class="mt-1">
                                                 {{ childcomment.content }}
                                             </div>
+                                            {% if childcomment.author == user %}
+                                                <div class="d-flex justify-content-end mb-2">
+                                                    <form action="/deletecomment/{{ childcomment.id }}/" method="post">
+                                                        {% csrf_token %}
+                                                        <button class="btn btn-danger btn-sm ml-1" type="submit">Delete</button>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                            <div class="mb-5"></div>
                                         </div>
                                     {% endif %}
                                 {% endfor %}

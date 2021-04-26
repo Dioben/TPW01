@@ -41,6 +41,7 @@ urlpatterns = [
     path('submitchapter/<int:chapterid>/', views.submitchapter, name="chapter poster"),
     path('deletechapter/<int:chapterid>/', views.deletechapter, name="chapter deleter"),
     path('comment/',views.postcomment,name="commentpost"),
+    path('deletecomment/<int:pk>/', views.deletecomment,name="deletecomment"),
     path('review/',views.createReview, name="reviewpost"),
     path('deletereview/<int:pk>/', views.deletereview,name="deletereview")
 ]
