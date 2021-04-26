@@ -70,9 +70,9 @@
                     {% csrf_token %}
                     {{ form.chapter }}
                     <input name="book" type="hidden" value="{{ book.id }}">
-                    <input name="chapter" type="hidden" value="{{ chapter.number }}">
+                    <input name="chapter" type="hidden" value="{{ chapter.id }}">
+                    <input name="chapternumber" type="hidden" value="{{ chapter.number }}">
                     <input name="page" type="hidden" value="{{ page }}">
-
                     <div class="form-group mb-1">
                         {{ form.content }}
                     </div>
@@ -101,7 +101,8 @@
                                     {% csrf_token %}
                                     {{ form.chapter }}
                                     <input name="book" type="hidden" value="{{ book.id }}">
-                                    <input name="chapter" type="hidden" value="{{ chapter.number }}">
+                                    <input name="chapter" type="hidden" value="{{ chapter.id }}">
+                                    <input name="chapternumber" type="hidden" value="{{ chapter.number }}">
                                     <input name="page" type="hidden" value="{{ page }}">
                                     <input name="parent" type="hidden" value="{{ comment.id }}">
                                     <div class="form-group mb-1">
