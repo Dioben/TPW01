@@ -124,7 +124,7 @@ def chapterpage(request, book, number, page):
             lastread = LastRead(author=request.user, book=book, chapter=chapter)
             lastread.save()
     form.chapter = chapter
-    pages = Comment.objects.filter(chapter_id=chapter.id).count() / COMMENTSPERPAGE
+    pages = Comment.objects.filter(chapter_id=chapter.id,parent__chapter=None).count() / COMMENTSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
@@ -298,3 +298,17 @@ def postcomment(request):
 
 def bookredir(request,pk):
     return redirect(f'1/')
+
+
+def deletereview(request,pk):
+    if not request.user.is_authenticated:
+        return HttpResponse("Please log in", 403)
+    review = Review.objects.filter(pk=pk)
+    if not review.exists():
+        return HttpResponse("Review not found",404)
+    review = review.get()
+    if review.author != request.user and not request.user.is_staff:
+        return HttpResponse("No delete permissions",403)
+    backurl = f'/book/{review.novel.id}/'
+    review.delete()
+    return redirect(backurl)
