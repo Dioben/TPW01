@@ -342,6 +342,10 @@ a {
     padding: 0 8px;
 }
 
+.comment-list-content button {
+    position: relative;
+    z-index: 100;
+}
 
 
 
