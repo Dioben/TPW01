@@ -84,23 +84,41 @@
         </div>
     {% endif %}
         <div class="col-xl-12 offset-xl-0">
-            <nav aria-label="pagination">
+             <nav aria-label="pagination">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    {% if page != 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/{{ urlprefix }}/1/" tabindex="-1">First</a>
                     </li>
+                    {% endif %}
+                    {% if previous > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/{{ urlprefix }}/{{ previous|add:"-1" }}/">{{ previous|add:"-1" }}</a>
+                    </li>
+                    {% endif %}
+                    {% if previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="/{{ urlprefix }}/{{ book.id }}/{{ previous }}/">{{ previous }}</a>
+                    </li>
+                    {% endif %}
                     <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
+                        <a class="page-link" href="#">{{ page }}</a>
                     </li>
+                     {% if page < secondtolast %}
                     <li class="page-item">
-                        <a class="page-link" href="#">2</a>
+                        <a class="page-link" href="/{{ urlprefix }}/{{ next }}/">{{ next}}</a>
                     </li>
+                    {% endif %}
+                    {% if nextpage < maxpages %}
                     <li class="page-item">
-                        <a class="page-link" href="#">3</a>
+                        <a class="page-link" href="/{{ urlprefix }}/{{ next|add:"1" }}/">{{ next|add:"1"}}</a>
                     </li>
+                    {% endif %}
+                    {% if page != maxpages %}
                     <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                        <a class="page-link" href="/{{ urlprefix }}/{{ maxpages }}/">Last</a>
                     </li>
+                     {%  endif %}
                 </ul>
             </nav>
         </div>

@@ -30,7 +30,6 @@ def bookrisingpop(page=1, total=20):
         novel.rating = novel.scoretotal/novel.reviewcount
         if novel.reviewcount == 0:
             novel.rating = 'fuck you'
-    print(data)
     return data
 
 

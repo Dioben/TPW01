@@ -16,16 +16,15 @@ from app.models import *
 # comment deleting
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
 # load latest chapters and top rated fics onto frontpage -> NEW IDEA: HOT CAN BE WHATEVER HAS GOTTEN MOST RATING IN LAST X HOURS
-# CHAPTER READING PAGE INCLUDING COMMENTS, CONSIDER USING PAGING FOR COMMENTS JUST 'CAUSE (no clue how to make hierarchical comments work in django templating btw)
 # top rated/ hot pages / new pages -> just needs the view I think
 # allow any user to save books for easy access in a following page -> bookmarked is a thing, just need to get a form or JS call going browser side
 # user profile page allowing new-book creation
 # book page allowing anyone to select chapters, allowing normal users to review and allowing the author to move into the chapter creation menu
 # REST for making/deleting/editing (description and title only) a book
-# REST for adding/removing/editing chapters
 
 COMMENTSPERPAGE = 15
 REVIEWSPERPAGE = 25
+BOOKSPERPAGE = 20
 
 # HOME PAGE
 def index(request):
@@ -65,17 +64,45 @@ def bookpage(request, pk,page):
 
 
 def topRated(request, page):
-    data = {'sorttype': 'Top Books', 'books': bookbyrating(page)}
+    data = {'sorttype': 'Top Books', 'books': bookbyrating(page,BOOKSPERPAGE), 'next': page + 1, 'previous': page - 1, 'page':page, 'urlprefix':'top'}
+    pages = Book.objects.all().count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['maxpages'] = pages
+    data['secondtolast'] = pages - 1
     return render(request, 'listing.html', data)
 
 
 def popularBooks(request, page):
-    data = {'sorttype': 'Rising Books', 'books': bookrisingpop(page)}
+    data = {'sorttype': 'Rising Books', 'books': bookrisingpop(page,BOOKSPERPAGE), 'next': page + 1, 'previous': page - 1, 'page':page,'urlprefix':'hot'}
+    twoweeksago = timezone.now() - timezone.timedelta(days=14)
+    pages = len({x['novel'] for x in Review.objects.filter(release__gt=twoweeksago).values('novel')}) / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['maxpages'] = pages
+    data['secondtolast'] = pages - 1
     return render(request, 'listing.html', data)
 
 
 def newBooks(request, page):
-    data = {'sorttype': 'Latest Books', 'books': bookbynew(page)}
+    data = {'sorttype': 'Latest Books', 'books': bookbynew(page,BOOKSPERPAGE), 'next': page + 1, 'previous': page - 1, 'page':page,'urlprefix':'new'}
+    pages = Book.objects.all().count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['maxpages'] = pages
+    data['secondtolast'] = pages - 1
     return render(request, 'listing.html', data)
 
 
