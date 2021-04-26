@@ -13,10 +13,8 @@ from app.models import *
 
 
 #TODO
-# comment deleting
 # user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
-# fix comment 404 error on chapter deletion
-# REVIEW DELETING
+
 
 COMMENTSPERPAGE = 15
 REVIEWSPERPAGE = 25
