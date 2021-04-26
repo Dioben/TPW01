@@ -151,12 +151,12 @@
                     <li class="page-item active">
                         <a class="page-link" href="#">{{ page }}</a>
                     </li>
-                     {% if page < secondtolast %}
+                     {% if page <= secondtolast %}
                     <li class="page-item">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"1" }}/">{{ page|add:"1"}}</a>
                     </li>
                     {% endif %}
-                    {% if page < maxpage %}
+                    {% if page|add:"1" < maxpage %}
                     <li class="page-item">
                         <a class="page-link" href="/chapter/{{ book.id }}/{{ chapter.number }}/{{ page|add:"2" }}/">{{ page|add:"2"}}</a>
                     </li>

@@ -108,7 +108,7 @@
                     <li class="page-item active">
                         <a class="page-link" href="#">{{ page }}</a>
                     </li>
-                     {% if page < secondtolast %}
+                     {% if page <= secondtolast %}
                     <li class="page-item">
                         <a class="page-link" href="/{{ urlprefix }}/{{ next }}/">{{ next}}</a>
                     </li>

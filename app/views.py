@@ -124,7 +124,7 @@ def chapterpage(request, book, number, page):
             lastread = LastRead(author=request.user, book=book, chapter=chapter)
             lastread.save()
     form.chapter = chapter
-    pages = Comment.objects.filter(chapter_id=chapter.id).count() / COMMENTSPERPAGE
+    pages = Comment.objects.filter(chapter_id=chapter.id,parent__chapter=None).count() / COMMENTSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
