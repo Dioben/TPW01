@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-!06=o!ot^0m+b()e(g8uea-9y0ebzenjm9e^grnp^lmx&ok#29
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['plaranjinha.pythonanywhere.com']
 
 # Application definition
 
@@ -119,6 +119,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_URL = '/static/'
+
+# default static files settings for PythonAnywhere.
+# see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
+MEDIA_ROOT = '/home/plaranjinha/TPW01/app/media'
+MEDIA_URL = '/media/'
+STATIC_ROOT = '/home/plaranjinha/TPW01/app/static'
 STATIC_URL = '/static/'
 
 # Default primary key field type
