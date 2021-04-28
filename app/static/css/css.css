@@ -213,6 +213,8 @@ body {
 .login {
     color: #477AA2;
     font-weight: bold;
+    margin-top: 8px;
+    margin-left: 8px;
 }
 
 .nav-tabs .nav-link.active {
