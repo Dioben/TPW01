@@ -147,7 +147,7 @@
                         <a class="page-link" href="/{{ urlprefix }}/{{ next }}/">{{ next}}</a>
                     </li>
                     {% endif %}
-                    {% if nextpage < maxpages %}
+                    {% if next < maxpages %}
                     <li class="page-item">
                         <a class="page-link" href="/{{ urlprefix }}/{{ next|add:"1" }}/">{{ next|add:"1"}}</a>
                     </li>
