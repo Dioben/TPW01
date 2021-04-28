@@ -22,8 +22,8 @@ BOOKSPERPAGE = 20
 
 # HOME PAGE
 def index(request):
-    data = {'newchaps': Chapter.objects.order_by("-release").select_related()[:10], 'toprated': bookbyrating(total=10),
-            'rising': bookrisingpop(total=10)}
+    data = {'newchaps': Chapter.objects.order_by("-release").select_related()[:5], 'toprated': bookbyrating(total=5),
+            'rising': bookrisingpop(total=5)}
     return render(request, "index.html", data)
 
 
