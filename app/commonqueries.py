@@ -25,14 +25,13 @@ def bookrisingpop(page=1, total=20):
         else:
             novels[review.novel] = review.rating
     '''
-    data = {review.novel for review in reviews[(page - 1) * total:page * total]}
+    data = list(dict.fromkeys(review.novel for review in reviews))[(page - 1) * total:page * total]
     for novel in data:
         if novel.reviewcount == 0:
             novel.rating = 0
         else:
             novel.rating = round(novel.scoretotal/novel.reviewcount)
     return data
-
 
 def bookbynew(page=1, total=20):
     return Chapter.objects.order_by("-release").select_related()[(page - 1) * total:page * total]

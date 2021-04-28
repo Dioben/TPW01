@@ -17,8 +17,8 @@ from app.models import *
 
 
 COMMENTSPERPAGE = 15
-REVIEWSPERPAGE = 25
-BOOKSPERPAGE = 20
+REVIEWSPERPAGE = 10
+BOOKSPERPAGE = 15
 
 # HOME PAGE
 def index(request):
