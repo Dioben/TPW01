@@ -336,9 +336,10 @@ def search(request, page):
         'next': page + 1,
         'previous': page - 1,
         'page': page,
-        'urlprefix': 'top'
+        'urlprefix': 'search',
+        'search': request.GET['title']
     }
-    pages = Book.objects.all().count() / BOOKSPERPAGE
+    pages = Book.objects.filter(title__contains=request.GET['title']).count() / BOOKSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
