@@ -90,7 +90,7 @@ def popularBooks(request, page):
 
 def newBooks(request, page):
     data = {'sorttype': 'Latest Books', 'books': bookbynew(page,BOOKSPERPAGE), 'next': page + 1, 'previous': page - 1, 'page':page,'urlprefix':'new'}
-    pages = Book.objects.all().count() / BOOKSPERPAGE
+    pages = Chapter.objects.all().count() / BOOKSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
