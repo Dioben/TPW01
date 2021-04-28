@@ -347,8 +347,21 @@ a {
     z-index: 100;
 }
 
+/* enable absolute positioning */
+.input-inner-icon {
+    position: relative;
+}
 
+.input-group-append > .btn {
+    color: #CBCBCB;
+    background-color: #181818;
+    border: 1px solid black;
+}
 
+.actions > form {
+    padding-right: 8px;
+    border-right: 1px solid #2b2b2b;
+}
 
 
 

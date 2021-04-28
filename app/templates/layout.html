@@ -19,26 +19,34 @@
         <div class="navbar navbar-light navbar-expand-md">
             <div class="collapse navbar-collapse" id="navcol-1"></div>
 
-            <span class="actions">
-                {% block user %}
-                    {% if user.is_authenticated %}
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-link dropdown-toggle btn-sm login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.username }} <i class="fa fa-user"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" type="button" href="/profile/">Profile</a>
-                        <div class="dropdown-divider"></div>
-                          <form action="/logout/" method="post">
-                              {% csrf_token %}
-                        <button class="dropdown-item" type="submit">Logout</button>
-                              </form>
-                      </div>
+            <span class="actions d-flex">
+                <form class="form-inline" action="/search/1/" method="get">
+{#                    {% csrf_token %}#}
+                    <div class="input-group">
+                        <label for="search-field"></label>
+                        <input class="form-control search-field" type="search" id="search-field" name="title" placeholder="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
                     </div>
+                </form>
+                {% if user.is_authenticated %}
+                <div class="btn-group">
+                  <button type="button" class="btn btn-link dropdown-toggle btn-sm login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ user.username }} <i class="fa fa-user"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" type="button" href="/profile/">Profile</a>
+                    <div class="dropdown-divider"></div>
+                      <form action="/logout/" method="post">
+                          {% csrf_token %}
+                    <button class="dropdown-item" type="submit">Logout</button>
+                          </form>
+                  </div>
+                </div>
                 {% else %}
                         <a class="login mr-1" href="/login/">Login</a>
                 {% endif %}
-                {% endblock %}
             </span>
 {#            <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>#}
         </div>

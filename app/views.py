@@ -325,3 +325,26 @@ def deletereview(request,pk):
     backurl = f'/book/{review.novel.id}/'
     review.delete()
     return redirect(backurl)
+
+
+def search(request, page):
+    if 'title' not in request.GET:
+        return redirect('/')
+    data = {
+        'sorttype': 'Search results',
+        'books': bookbytitle(request.GET['title'], page, BOOKSPERPAGE),
+        'next': page + 1,
+        'previous': page - 1,
+        'page': page,
+        'urlprefix': 'top'
+    }
+    pages = Book.objects.all().count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['maxpages'] = pages
+    data['secondtolast'] = pages - 1
+    return render(request, 'listing.html', data)
