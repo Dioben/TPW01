@@ -322,6 +322,10 @@ def deletereview(request,pk):
     review = review.get()
     if review.author != request.user and not request.user.is_staff:
         return HttpResponse("No delete permissions",403)
+    book = review.novel
+    book.scoretotal = book.scoretotal - review.rating
+    book.reviewcount -= 1
+    book.save()
     backurl = f'/book/{review.novel.id}/'
     review.delete()
     return redirect(backurl)
