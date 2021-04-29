@@ -17,14 +17,6 @@ def bookbyrating(page=1, total=20):
 def bookrisingpop(page=1, total=20):
     twoweeksago = timezone.now() - timezone.timedelta(days=14)
     reviews = Review.objects.filter(release__gt=twoweeksago).select_related('novel').annotate(popularity=1/Count('novel')*Sum('rating'),).order_by('-popularity')
-    '''
-    novels = {}
-    for review in reviews: #basic mapping-by-score, maybe I could've done this on db?
-        if review.novel in novels.keys():
-            novels[review.novel]+= review.rating
-        else:
-            novels[review.novel] = review.rating
-    '''
     data = list(dict.fromkeys(review.novel for review in reviews))[(page - 1) * total:page * total]
     for novel in data:
         if novel.reviewcount == 0:
@@ -33,9 +25,9 @@ def bookrisingpop(page=1, total=20):
             novel.rating = round(novel.scoretotal/novel.reviewcount)
     return data
 
+
 def bookbynew(page=1, total=20):
     return Chapter.objects.order_by("-release").select_related()[(page - 1) * total:page * total]
-    # return Book.objects.reverse()[(page - 1) * total:page * total]
 
 
 def reviewbyuser(user):
