@@ -1,7 +1,7 @@
 import math
 
 from django.contrib.auth import authenticate, login
-from django.db import transaction
+from Fdjango.db import transaction
 from django.shortcuts import render, redirect
 
 from app.commonqueries import *
@@ -101,7 +101,7 @@ def newBooks(request, page):
 
 def userpage(request):
     if not request.user.is_authenticated:
-        return HttpResponse('uh oh stinky', 403)
+        return HttpResponse('You are not signed in', 403)
     data = {'acc_owner': request.user, 'books': bookbyauthor(request.user), 'bookmarks': bookmarksbyuser(request.user)} #, 'reviews': reviewbyuser(request.user)}
     return render(request, 'user.html', data)
 
@@ -167,7 +167,7 @@ def createReview(request):
 def chaptereditor(request, book, chapter):
     novel = Book.objects.get(pk=book)
     if not (request.user.is_authenticated and novel.author == request.user):
-        return HttpResponse("very stinky", 403)
+        return HttpResponse("You are not the author", 403)
     if chapter == "new":
         form = ChapterPostForm(initial={'novel':book})
         chapter = 0
@@ -180,12 +180,12 @@ def chaptereditor(request, book, chapter):
 
 def bookEditor(request, book):  # book=0 if new?
     if not request.user.is_authenticated:
-        return HttpResponse('sus', 403)
+        return HttpResponse('Log in first', 403)
     novel = Book.objects.filter(pk=book)
     if novel.exists():
         novel = novel.get()
         if novel.author != request.user:
-            return HttpResponse('sus', 403)
+            return HttpResponse('You are not the author', 403)
     else:
         novel = Book(author=request.user)
     form = BookCreationForm(instance=novel)
@@ -195,21 +195,21 @@ def bookEditor(request, book):  # book=0 if new?
 def deletebook(request, book):
     novel = Book.objects.get(pk=book)
     if not request.user.is_authenticated or not (request.user.is_staff or request.user == novel.author):
-        return HttpResponse('get out', 403)
+        return HttpResponse('Forbidden', 403)
     novel.delete()
     return redirect('/')
 
 
 def submitbook(request, book):
     if not request.user.is_authenticated:
-        return HttpResponse('get out', 403)
+        return HttpResponse('Log in First', 403)
     novel = Book.objects.filter(pk=book)
     if not novel.exists():
         novel = Book(author=request.user)
     else:
         novel = novel.get()
     if request.user != novel.author:
-        return HttpResponse('get out', 403)
+        return HttpResponse('Access forbidden', 403)
     form = BookCreationForm(request.POST)
     if form.is_valid():
         novel.title = form.cleaned_data['title']
@@ -222,7 +222,7 @@ def submitbook(request, book):
 
 def submitchapter(request, chapterid):
     if not request.user.is_authenticated or 'novel' not in request.POST:
-        return HttpResponse('get out', 403)
+        return HttpResponse('Log in first', 403)
     chapter = Chapter.objects.filter(pk=chapterid)
     if chapter.exists():
         chapter = chapter.get()
@@ -232,7 +232,7 @@ def submitchapter(request, chapterid):
     form = ChapterPostForm(request.POST)
     if form.is_valid():
         if Book.objects.get(pk=form.cleaned_data['novel']).author != request.user:
-            return HttpResponse('get out', 403)
+            return HttpResponse('Unauthorized author', 403)
         chapter.novel = Book.objects.get(pk=form.cleaned_data['novel'])
         chapter.title = form.cleaned_data['title']
         chapter.text = form.cleaned_data['text']
@@ -254,7 +254,7 @@ def chaptersubmittransaction(chid, chapter):
 
 def deletechapter(request, chapterid):
     if not request.user.is_authenticated:
-        return HttpResponse('get out', 403)
+        return HttpResponse('Log in First', 403)
     chapter = Chapter.objects.filter(pk=chapterid)
     if chapter.exists():
         chapter = chapter.get()
