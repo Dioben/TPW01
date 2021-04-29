@@ -12,9 +12,6 @@ from app.models import *
 # Create your views here.
 
 
-#TODO
-# user profile page viewing and changing all reviews in another tab maybe? - may be too much for this project (leave for last)
-
 
 COMMENTSPERPAGE = 15
 REVIEWSPERPAGE = 10
