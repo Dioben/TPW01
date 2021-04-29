@@ -50,7 +50,6 @@ def bookpage(request, pk,page):
         if lastread.exists():
             data['lastread'] = lastread.get().chapter.number
         data['bookmarked'] = Book.objects.filter(pk=pk, bookmarks=request.user).exists()
-        data['isstaff'] = request.user.is_staff
     else:
         data['bookmarked'] = False
     return render(request, 'book.html', data)
@@ -131,7 +130,7 @@ def chapterpage(request, book, number, page):
     data = {'chapter': chapter, 'book': book, 'author': author,
             'comments': commentspage(chapter.id, page, COMMENTSPERPAGE),
             'isauthor': author == request.user, 'next': chapter.number + 1, 'previous': chapter.number - 1,
-            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1, "isstaff": request.user.is_staff}
+            'form': form, 'page': page, 'maxpage': pages, 'secondtolast': pages - 1}
     return render(request, 'chapter.html', data)
 
 
@@ -172,7 +171,7 @@ def chaptereditor(request, book, chapter):
         form = ChapterPostForm(initial={'novel':book})
         chapter = 0
     else:
-        chap = Chapter.objects.get(pk=int(chapter))
+        chap = Chapter.objects.get(number=int(chapter), novel=novel)
         form = ChapterPostForm(instance=chap, initial={'novel':book})
     data = {'book': novel, 'form': form, 'chapter_id': chapter}
     return render(request, "chaptereditor.html", data)
@@ -306,6 +305,7 @@ def deletecomment(request, pk):
     comment.delete()
     return redirect(backurl)
 
+
 def bookredir(request,pk):
     return redirect(f'1/')
 
@@ -319,10 +319,15 @@ def deletereview(request,pk):
     review = review.get()
     if review.author != request.user and not request.user.is_staff:
         return HttpResponse("No delete permissions",403)
-    Book.objects.filter(pk=review.novel.id).update(scoretotal=F('scoretotal') - review.rating, reviewcount=F('reviewcount') - 1)
     backurl = f'/book/{review.novel.id}/'
-    review.delete()
+    reviewdeletetransaction(review)
     return redirect(backurl)
+
+
+@transaction.atomic
+def reviewdeletetransaction(review):
+    Book.objects.filter(pk=review.novel.id).update(scoretotal=F('scoretotal') - review.rating, reviewcount=F('reviewcount') - 1)
+    review.delete()
 
 
 def search(request, page):
