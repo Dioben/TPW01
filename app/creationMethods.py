@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models import F
 from django.http import HttpResponse
 
@@ -30,6 +31,7 @@ def bookmarkSWITCH(request, bookid):  # ONLY USING THIS ONE, OTHERS ARE AROUND F
     return  # HttpResponse(bookmark, status=201)
 
 
+@transaction.atomic
 def reviewPOST(request):
     reviewform = ReviewForm(request.POST)
     if not reviewform.is_valid():

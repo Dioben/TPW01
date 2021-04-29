@@ -23,7 +23,7 @@
                             <button class="btn btn-primary btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-pencil"></i>&nbsp;Edit Chapter</button>
                         </form>
                     {% endif %}
-                    {% if isauthor or isstaff %}
+                    {% if isauthor or user.is_staff %}
                         <form class="d-flex" action="/deletechapter/{{ chapter.id }}/">
                             <button class="btn btn-danger btn-sm m-1 flex-grow-1" type="submit"><i class="fa fa-trash"></i>&nbsp;Delete Chapter</button>
                         </form>
@@ -68,20 +68,24 @@
                 <div class="separator"></div>
             </div>
             <div class="comment-form-content">
-                <form method="post" action="/comment/">
-                    {% csrf_token %}
-                    {{ form.chapter }}
-                    <input name="book" type="hidden" value="{{ book.id }}">
-                    <input name="chapter" type="hidden" value="{{ chapter.id }}">
-                    <input name="chapternumber" type="hidden" value="{{ chapter.number }}">
-                    <input name="page" type="hidden" value="{{ page }}">
-                    <div class="form-group mb-1">
-                        {{ form.content }}
-                    </div>
-                    <div class="d-flex justify-content-end mb-2">
-                        <button type="submit" class="btn btn-primary {% if not user.is_authenticated %}disabled{% endif %}">Post</button>
-                    </div>
-                </form>
+                {% if user.is_authenticated %}
+                    <form method="post" action="/comment/">
+                        {% csrf_token %}
+                        {{ form.chapter }}
+                        <input name="book" type="hidden" value="{{ book.id }}">
+                        <input name="chapter" type="hidden" value="{{ chapter.id }}">
+                        <input name="chapternumber" type="hidden" value="{{ chapter.number }}">
+                        <input name="page" type="hidden" value="{{ page }}">
+                        <div class="form-group mb-1">
+                            {{ form.content }}
+                        </div>
+                        <div class="d-flex justify-content-end mb-2">
+                            <button type="submit" class="btn btn-primary {% if not user.is_authenticated %}disabled{% endif %}">Post</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <span>Log in to comment!</span>
+                {% endif %}
                 <div class="separator"></div>
             </div>
             <div class="comment-list-content">
@@ -96,12 +100,16 @@
                                 {{ comment.content }}
                             </div>
                             <div class="d-flex justify-content-end mb-2">
-                                <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#comment{{ comment.id }}" aria-expanded="false" aria-controls="comment{{ comment.id }}">Reply</button>
-                                {% if comment.author == user or isstaff %}
-                                    <form action="/deletecomment/{{ comment.id }}/" method="post">
-                                        {% csrf_token %}
-                                        <button class="btn btn-danger btn-sm ml-1" type="submit">Delete</button>
-                                    </form>
+                                {% if user.is_authenticated %}
+                                    <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#comment{{ comment.id }}" aria-expanded="false" aria-controls="comment{{ comment.id }}">Reply</button>
+                                    {% if comment.author == user or user.is_staff %}
+                                        <form action="/deletecomment/{{ comment.id }}/" method="post">
+                                            {% csrf_token %}
+                                            <button class="btn btn-danger btn-sm ml-1" type="submit">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                {% else %}
+                                    <div style="height: 30px"></div>
                                 {% endif %}
                             </div>
                             <div class="collapse" id="comment{{ comment.id }}">
@@ -132,7 +140,7 @@
                                             <div class="mt-1">
                                                 {{ childcomment.content }}
                                             </div>
-                                            {% if childcomment.author == user or isstaff %}
+                                            {% if childcomment.author == user or user.is_staff %}
                                                 <div class="d-flex justify-content-end mb-2">
                                                     <form action="/deletecomment/{{ childcomment.id }}/" method="post">
                                                         {% csrf_token %}
