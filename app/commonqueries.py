@@ -58,4 +58,4 @@ def bookmarksbyuser(user):
 
 
 def bookbytitle(title, page=1, total=20):
-    return Book.objects.filter(title__contains=title).order_by('title')[(page - 1) * total:page * total]
+    return Book.objects.filter(title__contains=title).annotate(rating=F('scoretotal')/F('reviewcount')).order_by('title')[(page - 1) * total:page * total]
