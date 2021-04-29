@@ -1,13 +1,13 @@
-##Project description:
+## Project description:
 
 This project is a website where users can submit books chapter by chapter,
 review other user's books and comment on any chapter.
 
-##URL for deployed app:
+## URL for deployed app:
 
 http://plaranjinha.pythonanywhere.com
 
-##Accounts:
+## Accounts:
 
 Username | Password | Admin
 --- | --- | :---:
