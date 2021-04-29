@@ -1,7 +1,7 @@
 import math
 
 from django.contrib.auth import authenticate, login
-from Fdjango.db import transaction
+from django.db import transaction
 from django.shortcuts import render, redirect
 
 from app.commonqueries import *
