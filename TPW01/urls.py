@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from app import views
 from app.forms import CustomAuthenticationForm
@@ -44,5 +45,9 @@ urlpatterns = [
     path('deletecomment/<int:pk>/', views.deletecomment,name="deletecomment"),
     path('review/',views.createReview, name="reviewpost"),
     path('deletereview/<int:pk>/', views.deletereview,name="deletereview"),
-    path('search/<int:page>/', views.search, name='search')
+    path('search/<int:page>/', views.search, name='search'),
+
+    #REST STUFF
+    url('api/auth/', include('rest_auth.urls')),
+    url('api/auth/registration/', include('rest_auth.registration.urls'))
 ]
