@@ -48,7 +48,27 @@ urlpatterns = [
     path('search/<int:page>/', views.search, name='search'),
 
     #REST STUFF
-    path("api/test", views.testApi, name="test"),
     url('api/auth/', include('rest_auth.urls')),
-    url('api/auth/registration/', include('rest_auth.registration.urls'))
+    url('api/auth/registration/', include('rest_auth.registration.urls')),
+    path('api/hot/<int:page>/', views.apiPopularBooks, name="api hot"),
+    path('api/new/<int:page>/', views.apiNewBooks, name="api new"),
+    path('api/top/<int:page>/', views.apiTopRated, name="api top"),
+    path('api/profile/', views.apiProfile, name="api profile"),
+    path('api/book/<int:pk>/', views.apiBookpage, name="api book page"),
+    path('api/reviews/<int:book>/<int:page>/', views.apiReviews, name="api reviews"),
+    path('api/chapter/<int:book>/<int:number>/', views.apiChapterpage, name="api chapter page"),
+    path('api/comments/<int:chapter>/<int:page>/', views.apiComments, name="api comments"),
+    path('api/bookmark/', views.apiBookmark, name="api bookmark press"),
+    path('api/editBook/<int:book>/', views.apiBookEditor, name="api book editor"),
+    path('api/bookPost/', views.apiSubmitbook, name="api book poster"),
+    path('api/deleteBook/<int:book>/', views.apiDeletebook, name="api book deleter"),
+    path('api/chapterPost/', views.apiSubmitchapter, name="api chapter poster"),
+    path('api/chapterEdit/<int:chapterid>/', views.apiChapterEdit, name="api chapter editor"),
+    path('api/chapterDelete/<int:chapterid>/', views.apiDeletechapter, name="api chapter deleter"),
+    path('api/comment/', views.apiPostcomment, name="api comment post"),
+    path('api/commentDelete/<int:pk>/', views.apiDeletecomment, name="api delete comment"),
+    path('api/review/', views.apiCreateReview, name="api review post"),
+    path('api/reviewDelete/<int:pk>/', views.apiDeletereview, name="api delete review"),
+    path('api/search/<str:query>/<int:page>/', views.apiSearch, name='search'),
+    
 ]
