@@ -48,6 +48,7 @@ urlpatterns = [
     path('search/<int:page>/', views.search, name='search'),
 
     #REST STUFF
+    path("api/test", views.testApi, name="test"),
     url('api/auth/', include('rest_auth.urls')),
     url('api/auth/registration/', include('rest_auth.registration.urls'))
 ]

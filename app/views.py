@@ -9,6 +9,10 @@ from app.creationMethods import *
 from app.forms import ChapterPostForm, BookCreationForm, CommentForm, CustomUserCreationForm
 from app.models import *
 
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from app.serializers import *
 # Create your views here.
 
 
@@ -352,3 +356,7 @@ def search(request, page):
     data['maxpages'] = pages
     data['secondtolast'] = pages - 1
     return render(request, 'listing.html', data)
+
+@api_view(['GET'])
+def testApi(request):
+    return Response({'test': 'lmao get tested'})
