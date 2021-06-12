@@ -523,3 +523,96 @@ def apiBookmark(request,book):
     book.bookmarks.add(request.user)
     book.save()
     return Response({"bookmarked": True})
+
+@api_view(['PUT'])
+def apiBookEditor(request):
+    id = request.data['id']
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        book = Book.objects.get(pk=id)
+    except Book.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    if book.author!=request.user:
+        return Response("You do not have permission to do this", 403)
+    serializer = BookSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    else:
+        return Response("Bad Format", 400)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def apiSubmitbook(request):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    serializer = BookSerializer(data=request.data)
+    if serializer.is_valid():
+        book = serializer.save()
+        book.author = request.user
+        book.save()
+    else:
+        return Response("Bad Format", 400)
+    serializer = BookSerializer(book)
+    return Response(serializer.data,201)
+
+@api_view(['DELETE'])
+def apiDeletebook(request, book):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        book = Book.objects.get(pk=book)
+    except Book.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    if book.author != request.user:
+        return Response("You do not have permission to do this", 403)
+    book.delete()
+    return Response(status=204)
+
+@api_view(['POST'])
+def apiSubmitchapter(request):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    serializer = ChapterSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response("Bad Format", 400)
+    try:
+        book = Book.objects.get(pk=request.data['novel'])
+    except Book.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    if book.author != request.user:
+        return Response("You do not have permission to do this", 403)
+    serializer.save()
+    return Response(serializer.data, 201)
+
+@api_view(['PUT'])
+def apiChapterEdit(request):
+    id = request.data['id']
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        chapter = Chapter.objects.get(pk=id)
+    except Chapter.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    book = chapter.novel
+    if book.author != request.user:
+        return Response("You do not have permission to do this", 403)
+    serializer = ChapterSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response("Bad Format", 400)
+    serializer.save()
+    return Response(serializer.data, 201)
+
+@api_view(['DELETE'])
+def apiDeletechapter(request,chapterid):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        chapter = Chapter.objects.get(pk=chapterid)
+    except Chapter.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    book = chapter.novel
+    if book.author != request.user:
+        return Response("You do not have permission to do this", 403)
+    chapter.delete()
+    return Response(status=204)
