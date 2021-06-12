@@ -535,7 +535,7 @@ def apiBookEditor(request):
         return Response("Content Not Found", status=404)
     if book.author!=request.user:
         return Response("You do not have permission to do this", 403)
-    serializer = BookSerializer(data=request.data)
+    serializer = BookSerializer(book,data=request.data)
     if serializer.is_valid():
         serializer.save()
     else:
@@ -597,11 +597,11 @@ def apiChapterEdit(request):
     book = chapter.novel
     if book.author != request.user:
         return Response("You do not have permission to do this", 403)
-    serializer = ChapterSerializer(data=request.data)
+    serializer = ChapterSerializer(chapter,data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
     serializer.save()
-    return Response(serializer.data, 201)
+    return Response(serializer.data)
 
 @api_view(['DELETE'])
 def apiDeletechapter(request,chapterid):
@@ -615,4 +615,97 @@ def apiDeletechapter(request,chapterid):
     if book.author != request.user:
         return Response("You do not have permission to do this", 403)
     chapter.delete()
+    return Response(status=204)
+
+@api_view(['GET'])
+def apiSearch(request,query,page):
+    books = bookbytitle(query,page,BOOKSPERPAGE)
+    pages = Book.objects.filter(title__contains=request.GET['title']).count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    serializer = BookSerializer(books, many=True)
+    contentdict = serializer.data
+    contentdict['pages'] = pages
+    return Response(contentdict)
+
+@api_view(['POST'])
+def apiPostcomment(request):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        chapter = Chapter.objects.get(pk=request.data['chapter'])
+    except Chapter.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    serializer = CommentSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response("Bad Format", 400)
+    else:
+        comment = serializer.save()
+        comment.author = request.user
+        comment.save()
+    return Response(serializer.data,201)
+
+@api_view(['PUT'])
+def apiEditcomment(request):
+    id = request.data['id']
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        comment = Comment.objects.get(pk=id)
+    except Comment.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    serializer = CommentSerializer(comment,data=request.data)
+    if not serializer.is_valid():
+        return Response("Bad Format", 400)
+    comment.content = serializer.data['content']
+    comment.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def apiDeletecomment(request):
+    id = request.data['id']
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        comment = Comment.objects.get(pk=id)
+    except Comment.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    if comment.author != request.user:
+        return Response("You do not have permission to do this", 403)
+    comment.delete()
+    return Response(status=204)
+
+@api_view(['POST'])
+def apiCreateReview(request):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        book = Book.objects.get(pk=request.data['novel'])
+    except Book.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    serializer = ReviewSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response("Bad Format", 400)
+    if Review.objects.filter(author=request.user,novel=book).exists:
+        review = Review.objects.get(author=request.user,novel=book)
+        review.rating = serializer.data['rating']
+        review.text = serializer.data['text']
+    else:
+        review = serializer.save()
+        review.author = request.user
+    review.save()
+
+@api_view(['DELETE'])
+def apiDeletereview(request,book):
+    if not request.user.is_authenticated:
+        return Response("Please Log In", 403)
+    try:
+        review = Review.objects.get(novel_id=book, author=request.user)
+    except Review.DoesNotExist:
+        return Response("Content Not Found", status=404)
+    review.delete()
     return Response(status=204)

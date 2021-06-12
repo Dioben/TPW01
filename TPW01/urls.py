@@ -66,9 +66,10 @@ urlpatterns = [
     path('api/chapterEdit/', views.apiChapterEdit, name="api chapter editor"),
     path('api/chapterDelete/<int:chapterid>/', views.apiDeletechapter, name="api chapter deleter"),
     path('api/comment/', views.apiPostcomment, name="api comment post"),
+    path('api/commentEdit/', views.apiEditcomment, name="api comment post"),
     path('api/commentDelete/<int:pk>/', views.apiDeletecomment, name="api delete comment"),
     path('api/review/', views.apiCreateReview, name="api review post"),
-    path('api/reviewDelete/<int:pk>/', views.apiDeletereview, name="api delete review"),
+    path('api/reviewDelete/<int:book>/', views.apiDeletereview, name="api delete review"),
     path('api/search/<str:query>/<int:page>/', views.apiSearch, name='search'),
     
 ]
