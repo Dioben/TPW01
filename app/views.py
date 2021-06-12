@@ -369,5 +369,157 @@ def apiPopularBooks(request,page):
         pages = int(pages)
     else:
         pages = 1
+    serializer = BookSerializer(books, many=True)
+    contentdict = serializer.data
+    contentdict['pages'] = pages
+    return Response(contentdict)
 
-    return None
+@api_view(['GET'])
+def apiNewBooks(request,page):
+    books = bookbynew(page, BOOKSPERPAGE)
+    pages = Chapter.objects.all().count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    serializer = BookSerializer(books, many=True)
+    contentdict = serializer.data
+    contentdict['pages'] = pages
+    return Response(contentdict)
+
+@api_view(['GET'])
+def apiTopRated(request, page):
+    books = bookbyrating(page, BOOKSPERPAGE)
+    pages = Book.objects.all().count() / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    serializer = BookSerializer(books, many=True)
+    contentdict = serializer.data
+    contentdict['pages'] = pages
+    return Response(contentdict)
+
+@api_view(['GET'])
+def apiProfile(request):
+    if not request.user.is_authenticated:
+        return Response('You are not signed in', 403)
+    userSerializer = UserSerializer(request.user)
+    bookSerializer = BookSerializer(bookbyauthor(request.user), many=True)
+    bookmarks =BookSerializer(bookmarksbyuser(request.user), many=True)
+    data = {'acc_owner': userSerializer.data, 'books': bookSerializer.data, 'bookmarks': bookmarks.data }
+    return Response(data)
+
+@api_view(['GET'])
+def apiBookpage(request,pk):
+    data = {}
+    try:
+        book = BookSerializer(Book.objects.get(pk=pk))
+        data['book'] = book.data
+    except Book.DoesNotExist:
+        return Response("Content Not Found", 404)
+    if request.user.is_authenticated:
+        possiblereview = Review.objects.filter(author=request.user, novel_id=pk)
+        if possiblereview.exists():
+            self_review = ReviewSerializer(possiblereview.get())
+            data['self_review'] = self_review.data
+        lastread = LastRead.objects.filter(book_id=pk, author=request.user)
+        if lastread.exists():
+            data['lastread'] = lastread.get().chapter.number
+        else:
+            data['lastread'] = 0
+        data['bookmarked'] = Book.objects.filter(pk=pk, bookmarks=request.user).exists()
+    else:
+        data['lastread']=0
+        data['bookmarked'] = False
+
+    chapters = ChapterSerializer(Chapter.objects.only("title", "number", "release").filter(novel=data['book']),many=True)
+    data['chapters'] = chapters.data
+    reviews = ReviewSerializer(reviewpage(data['book'], 1, REVIEWSPERPAGE), many=True)
+    data['reviews'] = reviews.data
+    data['rating'] = str(
+        round(0 if data['book'].reviewcount == 0 else data['book'].scoretotal / data['book'].reviewcount, 1))
+    pages = Review.objects.filter(novel_id=pk).count() / REVIEWSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['pages'] = pages
+    return Response(data)
+
+@api_view(['GET'])
+def apiReviews(request, book, page):
+    try:
+        book = Book.objects.get(pk=book)
+    except Book.DoesNotExist:
+        return Response("Content Not Found", 404)
+    reviews = ReviewSerializer(reviewpage(book, page, REVIEWSPERPAGE), many=True)
+    return Response(reviews.data)
+
+@api_view(['GET'])
+def apiChapterpage(request,book,number):
+    data = {}
+    try:
+        chapter = ChapterSerializer(Chapter.objects.get(novel_id=book, number=number))
+    except Chapter.DoesNotExist:
+        return Response("Content Not Found", 404)
+    data['chapter'] = chapter.data
+    book = BookSerializer(chapter.novel)
+    data['book'] = book.data
+    author = UserSerializer(book.author)
+    data['author'] = author.data
+
+    if request.user.is_authenticated:
+        lastread = LastRead.objects.filter(book_id=book, author=request.user)
+        if lastread.exists():
+            lastread = lastread.get()
+            lastread.chapter = chapter
+            lastread.save()
+        else:
+            lastread = LastRead(author=request.user, book=book, chapter=chapter)
+            lastread.save()
+        try:
+            self_review = ReviewSerializer(Review.objects.get(author=request.user))
+            data['self_review'] = self_review.data
+        except Review.DoesNotExist:
+            pass
+    pages = Comment.objects.filter(chapter_id=chapter.id, parent__chapter=None).count() / COMMENTSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+    data['pages'] = pages
+    comments = CommentSerializer(commentspage(chapter.data['id'], 1, COMMENTSPERPAGE), many=True)
+    data['comments'] = comments.data
+    return Response(data)
+
+@api_view(['GET'])
+def apiComments(request,chapter,page):
+    try:
+        comments = CommentSerializer(commentspage(chapter,page,COMMENTSPERPAGE),many=True)
+    except Book.DoesNotExist:
+        return Response("Content Not Found", 404)
+    return Response(comments.data)
+
+@api_view(['GET'])
+def apiBookmark(request,book):
+    if not request.user.is_authenticated:
+        return Response("Please Log in", 403)
+    try:
+        book = Book.objects.get(pk=book)
+    except:
+        return Response("Content Not Found", 404)
+    if Book.objects.filter(pk=book, bookmarks=request.user).exists():
+        book.bookmarks.remove(request.user)
+        return Response({"bookmarked": False})
+    book.bookmarks.add(request.user)
+    book.save()
+    return Response({"bookmarked": True})
