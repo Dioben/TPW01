@@ -357,6 +357,17 @@ def search(request, page):
     data['secondtolast'] = pages - 1
     return render(request, 'listing.html', data)
 
+
 @api_view(['GET'])
-def testApi(request):
-    return Response({'test': 'lmao get tested'})
+def apiPopularBooks(request,page):
+    books = bookrisingpop(page, BOOKSPERPAGE)
+    twoweeksago = timezone.now() - timezone.timedelta(days=14)
+    pages = len({x['novel'] for x in Review.objects.filter(release__gt=twoweeksago).values('novel')}) / BOOKSPERPAGE
+    if pages:
+        if math.modf(pages)[0]:  # if not perfect division
+            pages += 1
+        pages = int(pages)
+    else:
+        pages = 1
+
+    return None
