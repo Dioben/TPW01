@@ -609,7 +609,7 @@ def apiDeletechapter(request,chapterid):
 @api_view(['GET'])
 def apiSearch(request,query,page):
     books = bookbytitle(query,page,BOOKSPERPAGE)
-    pages = Book.objects.filter(title__contains=request.GET['title']).count() / BOOKSPERPAGE
+    pages = Book.objects.filter(title__contains=query).count() / BOOKSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
@@ -617,9 +617,7 @@ def apiSearch(request,query,page):
     else:
         pages = 1
     serializer = BookSerializer(books, many=True)
-    contentdict = serializer.data
-    contentdict['pages'] = pages
-    return Response(contentdict)
+    return Response({'books': serializer.data, 'pages':pages})
 
 @api_view(['POST'])
 def apiPostcomment(request):
