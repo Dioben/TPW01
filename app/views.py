@@ -506,7 +506,7 @@ def apiBookmark(request,book):
         book = Book.objects.get(pk=book)
     except:
         return Response("Content Not Found", 404)
-    if Book.objects.filter(pk=book, bookmarks=request.user).exists():
+    if Book.objects.filter(pk=book.id, bookmarks=request.user).exists():
         book.bookmarks.remove(request.user)
         return Response({"bookmarked": False})
     book.bookmarks.add(request.user)
