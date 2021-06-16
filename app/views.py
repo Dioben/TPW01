@@ -370,9 +370,8 @@ def apiPopularBooks(request,page):
     else:
         pages = 1
     serializer = BookSerializer(books, many=True)
-    contentdict = serializer.data
-    contentdict['pages'] = pages
-    return Response(contentdict)
+
+    return Response({'books':serializer.data, 'pages':pages})
 
 @api_view(['GET'])
 def apiNewBooks(request,page):
@@ -385,9 +384,7 @@ def apiNewBooks(request,page):
     else:
         pages = 1
     serializer = BookSerializer(books, many=True)
-    contentdict = serializer.data
-    contentdict['pages'] = pages
-    return Response(contentdict)
+    return Response({'books':serializer.data, 'pages':pages})
 
 @api_view(['GET'])
 def apiTopRated(request, page):
@@ -400,9 +397,7 @@ def apiTopRated(request, page):
     else:
         pages = 1
     serializer = BookSerializer(books, many=True)
-    contentdict = serializer.data
-    contentdict['pages'] = pages
-    return Response(contentdict)
+    return Response({'books': serializer.data, 'pages': pages})
 
 @api_view(['GET'])
 def apiProfile(request):
