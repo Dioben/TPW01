@@ -432,12 +432,12 @@ def apiBookpage(request,pk):
         data['lastread']=0
         data['bookmarked'] = False
 
-    chapters = ChapterSerializer(Chapter.objects.only("title", "number", "release").filter(novel=data['book']),many=True)
+    chapters = SimpleChapterSerializer(Chapter.objects.only("title", "number", "release").filter(novel=pk),many=True)
     data['chapters'] = chapters.data
-    reviews = ReviewSerializer(reviewpage(data['book'], 1, REVIEWSPERPAGE), many=True)
+    reviews = ReviewSerializer(reviewpage(pk, 1, REVIEWSPERPAGE), many=True)
     data['reviews'] = reviews.data
     data['rating'] = str(
-        round(0 if data['book'].reviewcount == 0 else data['book'].scoretotal / data['book'].reviewcount, 1))
+        round(0 if data['book']['reviewcount'] == 0 else data['book']['scoretotal'] / data['book']['reviewcount'], 1))
     pages = Review.objects.filter(novel_id=pk).count() / REVIEWSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
@@ -461,13 +461,10 @@ def apiReviews(request, book, page):
 def apiChapterpage(request,book,number):
     data = {}
     try:
-        chapter = ChapterSerializer(Chapter.objects.get(novel_id=book, number=number))
+        chapter = Chapter.objects.get(novel_id=book, number=number)
     except Chapter.DoesNotExist:
         return Response("Content Not Found", 404)
-    data['chapter'] = chapter.data
-    book = BookSerializer(chapter.novel)
-    data['book'] = book.data
-    author = UserSerializer(book.author)
+    author = UserSerializer(chapter.novel.author)
     data['author'] = author.data
 
     if request.user.is_authenticated:
@@ -477,14 +474,10 @@ def apiChapterpage(request,book,number):
             lastread.chapter = chapter
             lastread.save()
         else:
-            lastread = LastRead(author=request.user, book=book, chapter=chapter)
+            lastread = LastRead(author=request.user, book=chapter.novel, chapter=chapter)
             lastread.save()
-        try:
-            self_review = ReviewSerializer(Review.objects.get(author=request.user))
-            data['self_review'] = self_review.data
-        except Review.DoesNotExist:
-            pass
-    pages = Comment.objects.filter(chapter_id=chapter.id, parent__chapter=None).count() / COMMENTSPERPAGE
+    chapter = ChapterSerializer(chapter)
+    pages = Comment.objects.filter(chapter_id=chapter.data['id'], parent__chapter=None).count() / COMMENTSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
             pages += 1
@@ -494,6 +487,7 @@ def apiChapterpage(request,book,number):
     data['pages'] = pages
     comments = CommentSerializer(commentspage(chapter.data['id'], 1, COMMENTSPERPAGE), many=True)
     data['comments'] = comments.data
+    data['chapter'] = chapter.data
     return Response(data)
 
 @api_view(['GET'])
