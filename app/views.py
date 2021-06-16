@@ -375,7 +375,7 @@ def apiPopularBooks(request,page):
 
 @api_view(['GET'])
 def apiNewBooks(request,page):
-    books = bookbynew(page, BOOKSPERPAGE)
+    chapters = bookbynew(page, BOOKSPERPAGE)
     pages = Chapter.objects.all().count() / BOOKSPERPAGE
     if pages:
         if math.modf(pages)[0]:  # if not perfect division
@@ -383,8 +383,8 @@ def apiNewBooks(request,page):
         pages = int(pages)
     else:
         pages = 1
-    serializer = BookSerializer(books, many=True)
-    return Response({'books':serializer.data, 'pages':pages})
+    serializer = ChapterSerializer(chapters, many=True)
+    return Response({'chapters':serializer.data, 'pages':pages})
 
 @api_view(['GET'])
 def apiTopRated(request, page):

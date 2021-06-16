@@ -15,6 +15,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ChapterSerializer(serializers.ModelSerializer):
+    book_name = serializers.CharField(source="novel.title",read_only=True)
     class Meta:
         model = Chapter
         fields = '__all__'
