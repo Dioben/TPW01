@@ -696,3 +696,13 @@ def apiDeletereview(request,book):
         return Response("Content Not Found", status=404)
     review.delete()
     return Response(status=204)
+
+@api_view(['POST'])
+def userExists(request):
+    name = request.POST['name']
+    email = request.POST['email']
+    if User.objects.filter(email=email):
+        return Response(True)
+    if User.objects.filter(username=name):
+        return Response(True)
+    return Response(False)
