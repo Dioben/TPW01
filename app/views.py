@@ -1,3 +1,4 @@
+import json
 import math
 
 from django.contrib.auth import authenticate, login
@@ -699,10 +700,17 @@ def apiDeletereview(request,book):
 
 @api_view(['POST'])
 def userExists(request):
-    name = request.POST['name']
-    email = request.POST['email']
-    if User.objects.filter(email=email):
+    data = json.loads(request.body)
+    if 'name' in data:
+        name = data['name']
+    else:
+        return Response(status=400)
+    if 'email' in data:
+        email = data['email']
+    else:
+        return Response(status=400)
+    if User.objects.filter(email=email).exists():
         return Response(True)
-    if User.objects.filter(username=name):
+    if User.objects.filter(username=name).exists():
         return Response(True)
     return Response(False)
