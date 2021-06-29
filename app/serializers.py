@@ -3,9 +3,10 @@ from app.models import *
 
 
 class BookSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source="author.username",read_only=True)
     class Meta:
         model = Book
-        fields = ('id','title','description','reviewcount','scoretotal','chapters','author')
+        fields = ('id','title','description','reviewcount','scoretotal','chapters','author','author_name')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -22,6 +23,7 @@ class SimpleChapterSerializer(serializers.Serializer):
 
 class ChapterSerializer(serializers.ModelSerializer):
     book_name = serializers.CharField(source="novel.title",read_only=True)
+    author_name = serializers.CharField(source="novel.author.username",read_only=True)
     class Meta:
         model = Chapter
         fields = '__all__'
