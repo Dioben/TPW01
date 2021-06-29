@@ -24,6 +24,7 @@ class SimpleChapterSerializer(serializers.Serializer):
 class ChapterSerializer(serializers.ModelSerializer):
     book_name = serializers.CharField(source="novel.title",read_only=True)
     author_name = serializers.CharField(source="novel.author.username",read_only=True)
+    total_chapters = serializers.IntegerField(source="novel.chapters",read_only=True)
     class Meta:
         model = Chapter
         fields = '__all__'
