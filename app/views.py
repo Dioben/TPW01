@@ -678,7 +678,7 @@ def apiCreateReview(request):
     serializer = ReviewSerializer(data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
-    if Review.objects.filter(author=request.user,novel=book).exists:
+    if Review.objects.filter(author=request.user,novel=book).exists():
         review = Review.objects.get(author=request.user,novel=book)
         review.rating = serializer.data['rating']
         review.text = serializer.data['text']
@@ -686,6 +686,7 @@ def apiCreateReview(request):
         review = serializer.save()
         review.author = request.user
     review.save()
+    return Response(status=201)
 
 @api_view(['DELETE'])
 def apiDeletereview(request,book):
