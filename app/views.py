@@ -554,7 +554,7 @@ def apiDeletebook(request, book):
         book = Book.objects.get(pk=book)
     except Book.DoesNotExist:
         return Response("Content Not Found", status=404)
-    if book.author != request.user:
+    if book.author != request.user and not request.user.is_staff:
         return Response("You do not have permission to do this", 403)
     book.delete()
     return Response(status=204)
@@ -602,7 +602,7 @@ def apiDeletechapter(request,chapterid):
     except Chapter.DoesNotExist:
         return Response("Content Not Found", status=404)
     book = chapter.novel
-    if book.author != request.user:
+    if book.author != request.user and not request.user.is_staff:
         return Response("You do not have permission to do this", 403)
     chapter.delete()
     return Response(status=204)
@@ -662,7 +662,7 @@ def apiDeletecomment(request):
         comment = Comment.objects.get(pk=id)
     except Comment.DoesNotExist:
         return Response("Content Not Found", status=404)
-    if comment.author != request.user:
+    if comment.author != request.user and not request.user.is_staff:
         return Response("You do not have permission to do this", 403)
     comment.delete()
     return Response(status=204)
@@ -689,13 +689,15 @@ def apiCreateReview(request):
     return Response(status=201)
 
 @api_view(['DELETE'])
-def apiDeletereview(request,book):
+def apiDeletereview(request,id):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
     try:
-        review = Review.objects.get(novel_id=book, author=request.user)
+        review = Review.objects.get(pk=id)
     except Review.DoesNotExist:
         return Response("Content Not Found", status=404)
+    if review.author != request.user and not request.user.is_staff:
+        return Response("You do not have permission to do this", 403)
     review.delete()
     return Response(status=204)
 
@@ -715,3 +717,15 @@ def userExists(request):
     if User.objects.filter(username=name).exists():
         return Response(True)
     return Response(False)
+
+@api_view(['GET'])
+def whoami(request): #framework didnt return whether a user was staff
+    if not request.user.is_authenticated:
+        return Response({})
+    user = User.objects.get(username=request.user.username)
+    return Response({'pk': user.pk,
+                     'username': user.username,
+                     'email': user.email,
+                     'first_name': user.first_name,
+                     'last_name': user.last_name,
+                     'is_staff': user.is_staff})
