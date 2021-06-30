@@ -431,7 +431,7 @@ def apiBookpage(request,pk):
         data['lastread']=0
         data['bookmarked'] = False
 
-    chapters = SimpleChapterSerializer(Chapter.objects.only("title", "number", "release").filter(novel=pk),many=True)
+    chapters = SimpleChapterSerializer(Chapter.objects.only("id", "title", "number", "release").filter(novel=pk),many=True)
     data['chapters'] = chapters.data
     reviews = ReviewSerializer(reviewpage(pk, 1, REVIEWSPERPAGE), many=True)
     data['reviews'] = reviews.data
@@ -534,7 +534,7 @@ def apiBookEditor(request):
 def apiSubmitbook(request):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
-    serializer = SimpleBookSerializer(data=request.data)
+    serializer = PostBookSerializer(data=request.data)
     if serializer.is_valid():
         serializer.validated_data['author'] = request.user
         book = serializer.save()
@@ -562,8 +562,9 @@ def apiDeletebook(request, book):
 def apiSubmitchapter(request):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
-    serializer = ChapterSerializer(data=request.data)
+    serializer = PostChapterSerializer(data=request.data)
     if not serializer.is_valid():
+        print(serializer.errors, file=sys.stderr)
         return Response("Bad Format", 400)
     try:
         book = Book.objects.get(pk=request.data['novel'])
@@ -571,8 +572,12 @@ def apiSubmitchapter(request):
         return Response("Content Not Found", status=404)
     if book.author != request.user:
         return Response("You do not have permission to do this", 403)
-    serializer.save()
-    return Response(serializer.data, 201)
+    chapter = Chapter()
+    chapter.novel = serializer.validated_data['novel']
+    chapter.title = serializer.data['title']
+    chapter.text = serializer.data['text']
+    chaptersubmittransaction(0, chapter)
+    return Response(ChapterSerializer(chapter).data, status=201)
 
 @api_view(['PUT'])
 def apiChapterEdit(request):
@@ -589,22 +594,24 @@ def apiChapterEdit(request):
     serializer = ChapterSerializer(chapter,data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
-    serializer.save()
-    return Response(serializer.data)
+    chapter.title = serializer.validated_data['title']
+    chapter.text = serializer.validated_data['text']
+    chaptersubmittransaction(id, chapter)
+    return Response(ChapterSerializer(chapter).data, status=201)
 
 @api_view(['DELETE'])
 def apiDeletechapter(request,chapterid):
     if not request.user.is_authenticated:
-        return Response("Please Log In", 403)
-    try:
-        chapter = Chapter.objects.get(pk=chapterid)
-    except Chapter.DoesNotExist:
-        return Response("Content Not Found", status=404)
-    book = chapter.novel
-    if book.author != request.user and not request.user.is_staff:
-        return Response("You do not have permission to do this", 403)
-    chapter.delete()
-    return Response(status=204)
+        return Response("Please Log In", status=403)
+    chapter = Chapter.objects.filter(pk=chapterid)
+    if chapter.exists():
+        chapter = chapter.get()
+        if request.user.is_staff or chapter.novel.author == request.user:
+            chapterdeletetransaction(chapter)
+            return Response(status=204)
+        return Response("No permission", status=403)
+    else:
+        return HttpResponse("Not Found", status=404)
 
 @api_view(['GET'])
 def apiSearch(request,query,page):
@@ -627,7 +634,7 @@ def apiPostcomment(request):
         Chapter.objects.get(pk=request.data['chapter'])
     except Chapter.DoesNotExist:
         return Response("Content Not Found", status=404)
-    serializer = SimpleCommentSerializer(data=request.data)
+    serializer = PostCommentSerializer(data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
     else:
@@ -657,7 +664,7 @@ def apiCreateReview(request):
         book = Book.objects.get(pk=request.data['novel'])
     except Book.DoesNotExist:
         return Response("Content Not Found", status=404)
-    serializer = SimpleReviewSerializer(data=request.data)
+    serializer = PostReviewSerializer(data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
     if Review.objects.filter(author=request.user,novel=book).exists():

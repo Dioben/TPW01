@@ -17,6 +17,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class SimpleChapterSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     title = serializers.CharField()
     release = serializers.DateTimeField()
     number = serializers.IntegerField()
@@ -39,10 +40,10 @@ class CommentSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'id')
 
 
-class SimpleCommentSerializer(serializers.ModelSerializer):
+class PostCommentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     content = serializers.CharField()
     chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all())
@@ -54,7 +55,7 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
         exclude = ['release']
 
 
-class SimpleReviewSerializer(serializers.ModelSerializer):
+class PostReviewSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     novel = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
     rating = serializers.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -64,7 +65,7 @@ class SimpleReviewSerializer(serializers.ModelSerializer):
         model = Review
         exclude = ['release', 'author']
 
-class SimpleBookSerializer(serializers.ModelSerializer):
+class PostBookSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(max_length=150)
     description = serializers.CharField(max_length=5000)
@@ -72,3 +73,14 @@ class SimpleBookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ('id', 'title', 'description')
+
+
+class PostChapterSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    title = serializers.CharField(max_length=150)
+    text = serializers.CharField(max_length=50000)
+    novel = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+
+    class Meta:
+        model = Chapter
+        exclude = ['release', 'number']
