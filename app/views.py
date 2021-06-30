@@ -534,8 +534,9 @@ def apiBookEditor(request):
 def apiSubmitbook(request):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
-    serializer = BookSerializer(data=request.data)
+    serializer = SimpleBookSerializer(data=request.data)
     if serializer.is_valid():
+        serializer.validated_data['author'] = request.user
         book = serializer.save()
         book.author = request.user
         book.save()

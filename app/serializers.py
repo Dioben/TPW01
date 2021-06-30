@@ -63,3 +63,12 @@ class SimpleReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         exclude = ['release', 'author']
+
+class SimpleBookSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    title = serializers.CharField(max_length=150)
+    description = serializers.CharField(max_length=5000)
+
+    class Meta:
+        model = Book
+        fields = ('id', 'title', 'description')
