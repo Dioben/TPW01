@@ -6,7 +6,7 @@ class BookSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source="author.username",read_only=True)
     class Meta:
         model = Book
-        fields = ('id','title','description','reviewcount','scoretotal','chapters','author','author_name')
+        fields = ('id','title','description','reviewcount','scoretotal','chapters','author','author_name','cover')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -26,6 +26,7 @@ class ChapterSerializer(serializers.ModelSerializer):
     book_name = serializers.CharField(source="novel.title",read_only=True)
     author_name = serializers.CharField(source="novel.author.username",read_only=True)
     total_chapters = serializers.IntegerField(source="novel.chapters",read_only=True)
+    book_cover = serializers.CharField(source="novel.cover",read_only=True)
     class Meta:
         model = Chapter
         fields = '__all__'
@@ -69,7 +70,7 @@ class PostBookSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(max_length=150)
     description = serializers.CharField(max_length=5000)
-
+    cover = serializers.CharField(required=False)
     class Meta:
         model = Book
         fields = ('id', 'title', 'description')

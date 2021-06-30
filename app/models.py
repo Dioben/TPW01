@@ -13,7 +13,7 @@ class Book(models.Model):
     scoretotal = models.BigIntegerField(default=0)
     chapters = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     bookmarks = models.ManyToManyField(User, related_name="bookmarks", blank=True)
-
+    cover = models.CharField(max_length=200,default="https://i.imgur.com/EWudfXq.png")
 
 class Review(models.Model):
     class Meta:
