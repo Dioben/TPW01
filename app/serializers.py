@@ -48,6 +48,18 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
     chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all())
     parent = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all(), required=False, allow_null=True)
     author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+
     class Meta:
         model = Comment
         exclude = ['release']
+
+
+class SimpleReviewSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    novel = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    rating = serializers.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    text = serializers.CharField(max_length=5000)
+
+    class Meta:
+        model = Review
+        exclude = ['release', 'author']

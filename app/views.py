@@ -1,5 +1,6 @@
 import json
 import math
+import sys
 
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
@@ -632,7 +633,7 @@ def apiPostcomment(request):
         serializer.validated_data['author'] = request.user
         comment = serializer.save()
         comment.save()
-    return Response(CommentSerializer(Comment.objects.get(id=serializer.data['id'])).data, 201)
+    return Response(CommentSerializer(comment).data, status=201)
 
 @api_view(['DELETE'])
 def apiDeletecomment(request, pk):
@@ -655,7 +656,7 @@ def apiCreateReview(request):
         book = Book.objects.get(pk=request.data['novel'])
     except Book.DoesNotExist:
         return Response("Content Not Found", status=404)
-    serializer = ReviewSerializer(data=request.data)
+    serializer = SimpleReviewSerializer(data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
     if Review.objects.filter(author=request.user,novel=book).exists():
@@ -663,10 +664,10 @@ def apiCreateReview(request):
         review.rating = serializer.data['rating']
         review.text = serializer.data['text']
     else:
+        serializer.validated_data['author'] = request.user
         review = serializer.save()
-        review.author = request.user
     review.save()
-    return Response(serializer.data, status=201)
+    return Response(ReviewSerializer(review).data, status=201)
 
 @api_view(['DELETE'])
 def apiDeletereview(request,id):
