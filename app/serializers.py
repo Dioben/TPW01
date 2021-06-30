@@ -41,3 +41,13 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email')
 
+
+class SimpleCommentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    content = serializers.CharField()
+    chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all())
+    parent = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all(), required=False, allow_null=True)
+    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    class Meta:
+        model = Comment
+        exclude = ['release']
