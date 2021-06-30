@@ -6,7 +6,7 @@ class BookSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source="author.username",read_only=True)
     class Meta:
         model = Book
-        fields = ('id','title','description','reviewcount','scoretotal','chapters','author','author_name')
+        fields = ('id','title','description','reviewcount','scoretotal','chapters','author','author_name','cover')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
