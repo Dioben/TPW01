@@ -666,7 +666,7 @@ def apiCreateReview(request):
         review = serializer.save()
         review.author = request.user
     review.save()
-    return Response(status=201)
+    return Response(serializer.data, status=201)
 
 @api_view(['DELETE'])
 def apiDeletereview(request,id):
