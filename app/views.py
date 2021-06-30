@@ -2,15 +2,12 @@ import json
 import math
 
 from django.contrib.auth import authenticate, login
-from django.db import transaction
 from django.shortcuts import render, redirect
 
 from app.commonqueries import *
 from app.creationMethods import *
 from app.forms import ChapterPostForm, BookCreationForm, CommentForm, CustomUserCreationForm
-from app.models import *
 
-from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.serializers import *
@@ -625,33 +622,17 @@ def apiPostcomment(request):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
     try:
-        chapter = Chapter.objects.get(pk=request.data['chapter'])
+        Chapter.objects.get(pk=request.data['chapter'])
     except Chapter.DoesNotExist:
         return Response("Content Not Found", status=404)
-    serializer = CommentSerializer(data=request.data)
+    serializer = SimpleCommentSerializer(data=request.data)
     if not serializer.is_valid():
         return Response("Bad Format", 400)
     else:
+        serializer.validated_data['author'] = request.user
         comment = serializer.save()
-        comment.author = request.user
         comment.save()
-    return Response(serializer.data,201)
-
-@api_view(['PUT'])
-def apiEditcomment(request):
-    id = request.data['id']
-    if not request.user.is_authenticated:
-        return Response("Please Log In", 403)
-    try:
-        comment = Comment.objects.get(pk=id)
-    except Comment.DoesNotExist:
-        return Response("Content Not Found", status=404)
-    serializer = CommentSerializer(comment,data=request.data)
-    if not serializer.is_valid():
-        return Response("Bad Format", 400)
-    comment.content = serializer.data['content']
-    comment.save()
-    return Response(serializer.data)
+    return Response(CommentSerializer(Comment.objects.get(id=serializer.data['id'])).data, 201)
 
 @api_view(['DELETE'])
 def apiDeletecomment(request):
