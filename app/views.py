@@ -635,12 +635,11 @@ def apiPostcomment(request):
     return Response(CommentSerializer(Comment.objects.get(id=serializer.data['id'])).data, 201)
 
 @api_view(['DELETE'])
-def apiDeletecomment(request):
-    id = request.data['id']
+def apiDeletecomment(request, pk):
     if not request.user.is_authenticated:
         return Response("Please Log In", 403)
     try:
-        comment = Comment.objects.get(pk=id)
+        comment = Comment.objects.get(pk=pk)
     except Comment.DoesNotExist:
         return Response("Content Not Found", status=404)
     if comment.author != request.user and not request.user.is_staff:
