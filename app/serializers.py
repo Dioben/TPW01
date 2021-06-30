@@ -66,6 +66,7 @@ class PostReviewSerializer(serializers.ModelSerializer):
         model = Review
         exclude = ['release', 'author']
 
+
 class PostBookSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     title = serializers.CharField(max_length=150)
@@ -73,7 +74,7 @@ class PostBookSerializer(serializers.ModelSerializer):
     cover = serializers.CharField(required=False)
     class Meta:
         model = Book
-        fields = ('id', 'title', 'description')
+        fields = ('id', 'title', 'description','cover')
 
 
 class PostChapterSerializer(serializers.ModelSerializer):
