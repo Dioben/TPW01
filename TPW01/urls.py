@@ -71,7 +71,7 @@ urlpatterns = [
     path('api/commentEdit/', views.apiEditcomment, name="api comment post"),
     path('api/commentDelete/<int:pk>/', views.apiDeletecomment, name="api delete comment"),
     path('api/review/', views.apiCreateReview, name="api review post"),
-    path('api/reviewDelete/<int:book>/', views.apiDeletereview, name="api delete review"),
+    path('api/reviewDelete/<int:id>/', views.apiDeletereview, name="api delete review"),
     path('api/search/<str:query>/<int:page>/', views.apiSearch, name='search'),
     
 ]
