@@ -54,6 +54,7 @@ urlpatterns = [
     path('api/hot/<int:page>/', views.apiPopularBooks, name="api hot"),
     path('api/new/<int:page>/', views.apiNewBooks, name="api new"),
     path('api/top/<int:page>/', views.apiTopRated, name="api top"),
+    path('api/whoami/', views.whoami,name="interrogate-self"), #added this in because DRAuth does not provide whether you are staff
     path('api/profile/', views.apiProfile, name="api profile"),
     path('api/book/<int:pk>/', views.apiBookpage, name="api book page"),
     path('api/reviews/<int:book>/<int:page>/', views.apiReviews, name="api reviews"),
