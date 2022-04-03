@@ -1,4 +1,4 @@
-## Project description:
+## Simple Django App for a university project
 
 This project is a website where users can submit books chapter by chapter,
 review other user's books and comment on any chapter.
